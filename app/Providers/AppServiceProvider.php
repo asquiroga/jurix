@@ -20,9 +20,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (env('APP_ENV') === 'production') {
+        if (request()->header('x-forwarded-proto') === 'https' || app()->environment('production')) {
             URL::forceScheme('https');
-        }        
+        }              
         if (request()->isSecure()) {
             URL::forceScheme('https');
         }
