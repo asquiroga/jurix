@@ -32,3 +32,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: ./public/build/
           server-dir: /public_html/build/
+          passive: true
+          retries: 3
+          retry-delay: 5000          
+
