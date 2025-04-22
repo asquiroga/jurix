@@ -24,7 +24,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload via FTP
+      - name: Upload via FTP 1
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -34,5 +34,19 @@ jobs:
           server-dir: /public_html/build/
           passive: true
           retries: 3
-          retry-delay: 5000          
+          retry-delay: 5000   
+          delete: true
+
+      - name: Upload via FTP 2
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./public/build/
+          server-dir: /app/public/build/
+          passive: true
+          retries: 3
+          retry-delay: 5000   
+          delete: true          
 
