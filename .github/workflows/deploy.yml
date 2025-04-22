@@ -24,7 +24,7 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload via FTP 1
+      - name: Upload Donweb - Path 1
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -37,7 +37,7 @@ jobs:
           retry-delay: 5000   
           delete: true
 
-      - name: Upload via FTP 2
+      - name: Upload Donweb - Path 2
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -47,6 +47,7 @@ jobs:
           server-dir: /app/public/build/
           passive: true
           retries: 3
-          retry-delay: 5000   
+          retry-delay: 8000   
           delete: true          
+    
 
