@@ -9,6 +9,9 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
+    env:
+      VITE_APP_NAME: Jurix!
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
