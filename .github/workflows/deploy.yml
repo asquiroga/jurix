@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      VITE_APP_NAME: Jurix!
+      VITE_APP_NAME: Jurix
 
     steps:
       - name: Checkout repository
