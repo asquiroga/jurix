@@ -1,9 +1,16 @@
 <?php
 
+use App\Http\Controllers\WebArtisanController;
+use App\Models\Juzgado;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
+
+Route::middleware('local')->group(function () {
+    Route::get('/web-artisan', [WebArtisanController::class, 'index']);
+    Route::post('/web-artisan/run', [WebArtisanController::class, 'run'])->name('web-artisan.run');
+});
 
 Route::get('/auth/redirect/google', function () {
     return Socialite::driver('google')->redirect();
@@ -34,9 +41,9 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        return Inertia::render('dashboard', ["juzgados" => Juzgado::all()]);
     })->name('dashboard');
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
