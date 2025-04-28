@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\WebArtisanController;
 use App\Models\Juzgado;
+use App\Models\Materia;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
@@ -41,8 +42,16 @@ Route::get('/', function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard', ["juzgados" => Juzgado::all()]);
+        return Inertia::render('dashboard');
     })->name('dashboard');
+
+    Route::get('juzgados', function () {
+        return Inertia::render('juzgados', ["juzgados" => Juzgado::all()]);
+    })->name('juzgados');
+
+    Route::get('materias', function () {
+        return Inertia::render('materias', ["materias" => Materia::all()]);
+    })->name('materias');
 });
 
 require __DIR__ . '/settings.php';

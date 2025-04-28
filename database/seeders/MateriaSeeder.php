@@ -61,9 +61,6 @@ class MateriaSeeder extends Seeder
         Materia::create(['nombre' => 'CANCELACION PLAZO FIJO']);
         Materia::create(['nombre' => 'CANCELACION TITULO EJECUTIVO']);
         Materia::create(['nombre' => 'CESE DE INFRACCION PROPIEDAD HORIZONTAL']);
-        Materia::create(['nombre' => 'Ac. - Anexo II (según Ac.)/5']);
-        Materia::create(['nombre' => 'Suprema Corte de Justicia Provincia de Buenos Aires']);
-        Materia::create(['nombre' => '4']);
         Materia::create(['nombre' => 'CESE DE INMISION']);
         Materia::create(['nombre' => 'CESE DEL FIDUCIARIO']);
         Materia::create(['nombre' => 'CESION DE HERENCIA']);
@@ -112,9 +109,6 @@ class MateriaSeeder extends Seeder
         Materia::create(['nombre' => 'DESALOJO (EXCEPTO POR FALTA DE PAGO)']);
         Materia::create(['nombre' => 'DESALOJO ANTICIPADO']);
         Materia::create(['nombre' => 'DESALOJO FALTA DE PAGO DESALOJO RURAL']);
-        Materia::create(['nombre' => '9']);
-        Materia::create(['nombre' => 'Ac. - Anexo II (según Ac.)/5']);
-        Materia::create(['nombre' => 'Suprema Corte de Justicia Provincia de Buenos Aires']);
         Materia::create(['nombre' => 'DESIGNACION DE ADMINISTRADOR INTERINO -FUNDACIONES-']);
         Materia::create(['nombre' => 'DETERMINACION PRECIO ARRENDAMIENTOS']);
         Materia::create(['nombre' => 'DETERMINACION PRECIO/ALQUILERES']);
@@ -165,8 +159,6 @@ class MateriaSeeder extends Seeder
         Materia::create(['nombre' => 'INSCRIPCION DECLARATORIA HEREDEROS(EXHORTO/OFICIO)']);
         Materia::create(['nombre' => 'INSCRIPCION EN EL REGISTRO AUTOMOTORES']);
         Materia::create(['nombre' => 'INTERVENCION JUDICIAL (GENERICA)']);
-        Materia::create(['nombre' => 'Ac. - Anexo II (según Ac.)/5']);
-        Materia::create(['nombre' => 'Suprema Corte de Justicia Provincia de Buenos Aires']);
         Materia::create(['nombre' => 'INTERVENCION JUDICIAL (LEY T/S LEY)']);
         Materia::create(['nombre' => 'INTERVENCION JUDICIAL FIDEICOMISO']);
         Materia::create(['nombre' => 'INTRUSION-ACCIONES DERIVADAS DE']);
@@ -217,8 +209,6 @@ class MateriaSeeder extends Seeder
         Materia::create(['nombre' => 'REPETICION SUMAS DE DINERO']);
         Materia::create(['nombre' => 'RESCISION DE CONTRATOS CIVILES/COMERCIALES']);
         Materia::create(['nombre' => 'RESOLUCION CONTRATO COMPRA/VENTA INMUEBLES']);
-        Materia::create(['nombre' => 'Ac. - Anexo II (según Ac.)/5']);
-        Materia::create(['nombre' => 'Suprema Corte de Justicia Provincia de Buenos Aires']);
         Materia::create(['nombre' => 'RESOLUCION DE CONTRATOS CIVILES/COMERCIALES']);
         Materia::create(['nombre' => 'RESTRICCIONES Y LIMITES AL DOMINIO']);
         Materia::create(['nombre' => 'RETROCESION']);
