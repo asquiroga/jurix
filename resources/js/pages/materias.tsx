@@ -22,13 +22,13 @@ export default function Juzgados() {
 
                     <Button variant="outline">Agregar Materia</Button>
 
-                    <table className="m-3">
+                    <table className="m-3 w-full table-auto border border-gray-300">
                         <thead>
                             <th>Nombre</th>
                         </thead>
                         <tbody>
                             {(materias as any[]).map((m) => (
-                                <tr className="m-3">
+                                <tr className="even:bg-[rgb(240,240,250)]">
                                     <td className="p-1">{m.nombre}</td>
                                 </tr>
                             ))}

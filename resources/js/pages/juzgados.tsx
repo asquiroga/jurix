@@ -21,14 +21,14 @@ export default function Juzgados() {
 
                     <Button variant="outline">Agregar Juzgado</Button>
 
-                    <table className="m-3">
+                    <table className="m-3 w-full table-auto border border-gray-300">
                         <thead>
                             <th>Nombre</th>
                         </thead>
                         <tbody>
                             {(juzgados as any[]).map((j) => (
-                                <tr>
-                                    <td>{j.nombre}</td>
+                                <tr className="even:bg-[rgb(240,240,250)]">
+                                    <td className="p-1">{j.nombre}</td>
                                 </tr>
                             ))}
                         </tbody>
