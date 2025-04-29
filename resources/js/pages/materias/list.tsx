@@ -31,7 +31,9 @@ export default function Materias() {
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border p-3 md:min-h-min">
                     <HeadingSmall title="Lista de Materias" />
 
-                    <Button variant="outline">Agregar Materia</Button>
+                    <Button variant="outline" onClick={() => router.visit('/materias/nueva')}>
+                        Agregar Materia
+                    </Button>
 
                     <div className="m-2">
                         Filtrar :

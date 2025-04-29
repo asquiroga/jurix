@@ -50,6 +50,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('juzgados');
 
     Route::get('materias', [MateriasController::class, 'index'])->name("materias");
+    Route::get('materias/nueva', [MateriasController::class, 'new']);
+    Route::post('materias/store', [MateriasController::class, 'store']);
 });
 
 require __DIR__ . '/settings.php';

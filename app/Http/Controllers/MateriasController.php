@@ -21,7 +21,12 @@ class MateriasController extends Controller
             $query->where('fuero_id', '=', 1);
         }
 
-        return Inertia::render('materias', ["materias" => $query->get()]);
+        return Inertia::render('materias/list', ["materias" => $query->get()]);
+    }
+
+    public function new()
+    {
+        return Inertia::render('materias/nueva');
     }
 
     /**
@@ -29,7 +34,18 @@ class MateriasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nombre' => 'required|string',
+            'fuero' => 'required',
+        ]);
+
+        Materia::create([
+            "nombre" => $request->nombre,
+            "codigo" => "-1",
+            "fuero_id" => $request->fuero
+        ]);
+
+        return redirect()->back()->with('success', 'Usuario creado');
     }
 
     /**
