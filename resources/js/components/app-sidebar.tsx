@@ -14,8 +14,8 @@ const mainNavItems: NavItem[] = [
         icon: LayoutGrid,
     },
     {
-        title: 'Causas',
-        href: '/causas',
+        title: 'Expedientes',
+        href: '/expedientes',
         icon: Layers,
     },
     {

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamps();
-            $table->string('rol');
+            $table->string('rol')->default('');
         });
 
         Schema::create('sessions', function (Blueprint $table) {

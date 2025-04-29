@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MateriasController;
 use App\Http\Controllers\WebArtisanController;
 use App\Models\Juzgado;
@@ -41,9 +42,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('juzgados', function () {
         return Inertia::render('juzgados', ["juzgados" => Juzgado::all()]);

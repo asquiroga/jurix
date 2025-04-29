@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Juzgado extends Model
 {
-    //
+    protected $fillable = ['nombre'];
 }
