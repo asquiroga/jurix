@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { AlignJustify, Layers, LayoutGrid, Scale, Settings } from 'lucide-react';
+import { AlignJustify, Layers, LayoutGrid, Scale, Settings, Users } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -32,6 +32,11 @@ const mainNavItems: NavItem[] = [
         title: 'Datos Globales',
         href: '/global-config',
         icon: Settings,
+    },
+    {
+        title: 'Clientes',
+        href: '/clients',
+        icon: Users,
     },
 ];
 

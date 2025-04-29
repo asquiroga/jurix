@@ -1,8 +1,8 @@
 <?php
 
+use App\Http\Controllers\MateriasController;
 use App\Http\Controllers\WebArtisanController;
 use App\Models\Juzgado;
-use App\Models\Materia;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
@@ -49,9 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('juzgados', ["juzgados" => Juzgado::all()]);
     })->name('juzgados');
 
-    Route::get('materias', function () {
-        return Inertia::render('materias', ["materias" => Materia::all()]);
-    })->name('materias');
+    Route::get('materias', [MateriasController::class, 'index'])->name("materias");
 });
 
 require __DIR__ . '/settings.php';
