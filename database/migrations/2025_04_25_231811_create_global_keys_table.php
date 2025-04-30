@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('global_keys', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string("valorIus"); 
+            $table->string("key");
+            $table->string("value")->nullable();
         });
     }
 

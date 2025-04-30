@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class GlobalKey extends Model
 {
-    //
+    protected $fillable = ['key', 'value'];
 }

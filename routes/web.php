@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MateriasController;
 use App\Http\Controllers\WebArtisanController;
+use App\Jobs\IusPriceExtractor;
 use App\Models\Juzgado;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,6 +41,12 @@ Route::get('/auth/callback/google', function () {
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
+
+
+Route::get('/probar-bot', function () {
+    IusPriceExtractor::dispatch();
+    return 'Job lanzado';
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
