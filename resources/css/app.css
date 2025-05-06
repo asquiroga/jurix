@@ -228,3 +228,20 @@ div.notif-slot .tramite {
     font-style: italic;
     font-weight: bold;
 }
+
+div.notif-body {
+    background: #d8fbf0;
+    padding: 5px 13px;
+    border-radius: 10px;
+
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease-out forwards;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

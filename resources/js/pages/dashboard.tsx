@@ -97,7 +97,13 @@ export default function Dashboard() {
                                                 />
                                             )}
                                         </div>
-                                        {notif?.body && notif.body.map((aLine: string) => <span>{aLine}</span>)}
+                                        {notif?.body && (
+                                            <div className="notif-body">
+                                                {notif.body.map((aLine: string) => (
+                                                    <span>{aLine}</span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
