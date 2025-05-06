@@ -40,6 +40,14 @@ export default function Dashboard() {
         });
     };
 
+    const viewNotification = (notification: any) => {
+        setFetching(true);
+        axios.get('/scba-get-notification?url=' + notification.Caratula.link).then((response) => {
+            setFetching(false);
+            notification.body = response.data;
+        });
+    };
+
     const precioTotal = !isNaN(ius) ? ius * parseInt(precio_ius as string) : undefined;
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
@@ -77,6 +85,19 @@ export default function Dashboard() {
                                         <div className="organismo">{notif?.Organismo} </div>
                                         <div className="caratula">{notif?.Caratula?.text} </div>
                                         <div className="tramite">{notif?.Tramite} </div>
+
+                                        <div className="mt-4">
+                                            {!notif.body && (
+                                                <input
+                                                    type="button"
+                                                    value="Ver Notificacion"
+                                                    className="small-button"
+                                                    disabled={fetching}
+                                                    onClick={() => viewNotification(notif)}
+                                                />
+                                            )}
+                                        </div>
+                                        {notif?.body && notif.body.map((aLine: string) => <span>{aLine}</span>)}
                                     </div>
                                 ))}
                             </div>

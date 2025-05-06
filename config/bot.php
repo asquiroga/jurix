@@ -6,7 +6,8 @@ return [
     ],
     "scba" => [
         "loginUrl" => "https://notificaciones.scba.gov.ar/InterfazBootstrap/Login.aspx/VerificarPass",
-        "notificationsUrl" => "https://notificaciones.scba.gov.ar/InterfazBootstrap/notificaciones.aspx/listarNotificaciones"
+        "notificationsUrl" => "https://notificaciones.scba.gov.ar/InterfazBootstrap/notificaciones.aspx/listarNotificaciones",
+        "baseUrl" => "https://notificaciones.scba.gov.ar"
     ]
 
 ];

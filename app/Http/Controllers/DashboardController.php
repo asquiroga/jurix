@@ -25,21 +25,8 @@ class DashboardController extends Controller
             $fecha = date('d/m/Y');
         }
 
-        $loginPayload = [
-            'domicilioElectronico' => env("SCBA_USER"),
-            'pass' => env("SCBA_PASS"),
-            'url' => '',
-        ];
+        $response = Helpers::scbaLogin();
 
-        // Ajax a /VerificarPass
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ])
-            ->post(config("bot.scba.loginUrl"), $loginPayload);
-
-
-        // Verificás si fue exitoso
         if ($response->successful()) {
             $cookies = $response->cookies();
             $cookieJar = $cookies;
@@ -110,6 +97,44 @@ class DashboardController extends Controller
             return $notificaciones;
         } else {
             dd('Login fallido', $response->status(), $response->body());
+        }
+    }
+
+    public function getNotificationBody(Request $request)
+    {
+        // https://notificaciones.scba.gov.ar/InterfazBootstrap/textonotificacion.aspx?idnot=115331705&fecha=2
+
+        $response = Helpers::scbaLogin();
+        if ($response->successful()) {
+            $cookies = $response->cookies();
+            $cookieJar = $cookies;
+
+            $cookieArray = [];
+            foreach ($cookieJar->toArray() as $cookie) {
+                $cookieArray[$cookie['Name']] = $cookie['Value'];
+            }
+
+            $response = Http::withCookies($cookieArray, 'notificaciones.scba.gov.ar')
+                ->get(config('bot.scba.baseUrl') . $request->query('url'));
+
+            $crawler = new Crawler($response->body());
+
+            $result = [];
+            $crawler->filter("#bTexto p")->each(function ($paragraph) use (&$result) {
+                $text = "";
+                foreach ($paragraph->getNode(0)->childNodes as $child) {
+                    if ($child->nodeType === XML_TEXT_NODE) {
+                        $text .= trim($child->textContent);
+                    }
+                }
+
+                $text = trim($text);
+
+                if (is_string($text) && strlen($text) > 1)
+                    array_push($result, $text);
+            });
+
+            return $result;
         }
     }
 }
