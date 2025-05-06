@@ -192,3 +192,17 @@ div.notif-slot {
     border: 1px solid gray;
     padding: 1em;
 }
+
+div.notif-slot:nth-child(even) {
+    background-color: #f0f0f9;
+}
+
+div.notif-slot .fecha {
+    font-size: 0.9em;
+    color: gray;
+}
+
+div.notif-slot .tramite {
+    font-style: italic;
+    font-weight: bold;
+}

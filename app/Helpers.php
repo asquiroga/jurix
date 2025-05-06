@@ -19,7 +19,13 @@ class Helpers
 
     public static function esFechaValida($fecha)
     {
-        $d = DateTime::createFromFormat('d/m/Y', $fecha);
-        return $d && $d->format('d/m/Y') === $fecha;
+        // Validamos que el patrón sea d/m/Y con o sin ceros
+        if (!preg_match('/^\d{1,2}\/\d{1,2}\/\d{4}$/', $fecha)) {
+            return false;
+        }
+
+        // Separar y validar con checkdate
+        [$dia, $mes, $anio] = explode('/', $fecha);
+        return checkdate((int)$mes, (int)$dia, (int)$anio);
     }
 }

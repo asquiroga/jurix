@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { AlignJustify, Layers, LayoutGrid, Scale, Settings, Users } from 'lucide-react';
+import { AlignJustify, LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -13,31 +13,31 @@ const mainNavItems: NavItem[] = [
         href: '/dashboard',
         icon: LayoutGrid,
     },
-    {
-        title: 'Expedientes',
-        href: '/expedientes',
-        icon: Layers,
-    },
-    {
-        title: 'Juzgados',
-        href: '/juzgados',
-        icon: Scale,
-    },
+    // {
+    //     title: 'Expedientes',
+    //     href: '/expedientes',
+    //     icon: Layers,
+    // },
+    // {
+    //     title: 'Juzgados',
+    //     href: '/juzgados',
+    //     icon: Scale,
+    // },
     {
         title: 'Materias',
         href: '/materias',
         icon: AlignJustify,
     },
-    {
-        title: 'Datos Globales',
-        href: '/global-config',
-        icon: Settings,
-    },
-    {
-        title: 'Clientes',
-        href: '/clients',
-        icon: Users,
-    },
+    // {
+    //     title: 'Datos Globales',
+    //     href: '/global-config',
+    //     icon: Settings,
+    // },
+    // {
+    //     title: 'Clientes',
+    //     href: '/clients',
+    //     icon: Users,
+    // },
 ];
 
 const footerNavItems: NavItem[] = [];

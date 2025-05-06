@@ -19,7 +19,7 @@ class DashboardController extends Controller
     public function getScbaNotifications(Request $request)
     {
         $fecha = "";
-        if ($request->has('fecha')) {
+        if ($request->has('fecha') && Helpers::esFechaValida($request->query('fecha'))) {
             $fecha = $request->query('fecha');
         } else {
             $fecha = date('d/m/Y');
@@ -28,7 +28,7 @@ class DashboardController extends Controller
         $loginPayload = [
             'domicilioElectronico' => env("SCBA_USER"),
             'pass' => env("SCBA_PASS"),
-            'url' => '?url=/InterfazBootstrap/novedades.aspx',
+            'url' => '',
         ];
 
         // Ajax a /VerificarPass
@@ -36,7 +36,7 @@ class DashboardController extends Controller
             'Accept' => 'application/json',
             'Content-Type' => 'application/json',
         ])
-            ->post('https://notificaciones.scba.gov.ar/InterfazBootstrap/Login.aspx/VerificarPass', $loginPayload);
+            ->post(config("bot.scba.loginUrl"), $loginPayload);
 
 
         // Verificás si fue exitoso
@@ -75,7 +75,7 @@ class DashboardController extends Controller
                 'Content-Type' => 'application/json',
             ])
                 ->withCookies($cookieArray, 'notificaciones.scba.gov.ar')
-                ->post('https://notificaciones.scba.gov.ar/InterfazBootstrap/notificaciones.aspx/listarNotificaciones', $searchPayload);
+                ->post(config('bot.scba.notificationsUrl'), $searchPayload);
 
             $crazyResponse = json_decode($response->json()["d"]);
             $notif = $crazyResponse->notificaciones;
@@ -87,7 +87,13 @@ class DashboardController extends Controller
                 $currentNotif = [];
                 $node->filter("td")->filterXPath('//td[label]')->each(function ($td) use (&$currentNotif) {
                     $key = Helpers::quitarAcentos($td->filter("label")->text());
-                    $currentNotif[$key] = $td->text();
+                    $text = "";
+                    foreach ($td->getNode(0)->childNodes as $child) {
+                        if ($child->nodeType === XML_TEXT_NODE) {
+                            $text .= trim($child->textContent);
+                        }
+                    }
+                    $currentNotif[$key] = $text;
                 });
                 $node->filter("td")->filterXPath('//td[label and a]')->each(function ($td) use (&$currentNotif) {
                     $key = Helpers::quitarAcentos($td->filter("label")->text());
@@ -98,9 +104,9 @@ class DashboardController extends Controller
                     ];
                 });
 
-
                 array_push($notificaciones, $currentNotif);
             });
+
             return $notificaciones;
         } else {
             dd('Login fallido', $response->status(), $response->body());

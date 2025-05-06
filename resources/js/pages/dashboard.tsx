@@ -46,8 +46,6 @@ export default function Dashboard() {
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border p-3 md:min-h-min">
-                    <div className="m-2">Usuario conectado: {(auth as any).user.name} </div>
-
                     <div className="m-2 border bg-[rgb(240,240,240)] p-3">
                         Precio IUS: <span className="text-[rgb(150,100,100)]">{priceFormatter.format(precio_ius as any)}</span> <br />
                         Cantidad de IUS :
@@ -75,10 +73,10 @@ export default function Dashboard() {
                             <div>
                                 {notifications.map((notif: any) => (
                                     <div className="notif-slot">
-                                        {notif?.Organismo} <br />
-                                        {notif?.Caratula?.text} <br />
-                                        {notif?.Tramite} <br />
-                                        {notif?.AltaoDisponibilidad}
+                                        <div className="fecha">{notif?.AltaoDisponibilidad} </div>
+                                        <div className="organismo">{notif?.Organismo} </div>
+                                        <div className="caratula">{notif?.Caratula?.text} </div>
+                                        <div className="tramite">{notif?.Tramite} </div>
                                     </div>
                                 ))}
                             </div>
