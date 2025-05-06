@@ -8,7 +8,8 @@ class Helpers
 {
     public static function quitarAcentos(string $cadena): string
     {
-        return Helpers::solo_letras(iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $cadena));
+        $sin = transliterator_transliterate('Any-Latin; Latin-ASCII', $cadena);
+        return Helpers::solo_letras($sin);
     }
 
     public static function solo_letras(string $cadena): string
