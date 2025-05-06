@@ -157,3 +157,38 @@
         @apply bg-background text-foreground;
     }
 }
+
+input.button {
+    background-color: #4f46e5; /* azul violeta */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        transform 0.1s ease;
+}
+
+input.button:hover {
+    background-color: #4338ca; /* tono más oscuro */
+}
+
+input.button:active {
+    transform: scale(0.97);
+}
+
+input.button:disabled {
+    background-color: #9ca3af; /* gris */
+    color: #d1d5db; /* gris claro */
+    cursor: not-allowed;
+    transform: none; /* eliminar el efecto de escala */
+}
+
+div.notif-slot {
+    margin: 1em;
+    border: 1px solid gray;
+    padding: 1em;
+}

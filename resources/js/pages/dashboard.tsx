@@ -1,6 +1,7 @@
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
+import axios from 'axios';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -17,9 +18,27 @@ const priceFormatter = new Intl.NumberFormat('es-AR', {
     maximumFractionDigits: 0,
 });
 
+const fechaActual = () => {
+    const hoy = new Date();
+    const dia = String(hoy.getDate()).padStart(2, '0');
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+    const anio = hoy.getFullYear();
+    return `${dia}/${mes}/${anio}`;
+};
 export default function Dashboard() {
     const { auth, precio_ius } = usePage().props;
     const [ius, setIus] = useState<number>(NaN);
+    const [fecha, setFecha] = useState<string>(fechaActual());
+    const [fetching, setFetching] = useState<boolean>(false);
+    const [notifications, setNotifications] = useState<any>([]);
+
+    const fetchScba = () => {
+        setFetching(true);
+        axios.get('/scba-notifications?fecha=' + fecha).then((response) => {
+            setFetching(false);
+            setNotifications(response.data);
+        });
+    };
 
     const precioTotal = !isNaN(ius) ? ius * parseInt(precio_ius as string) : undefined;
     return (
@@ -40,6 +59,31 @@ export default function Dashboard() {
                         {precioTotal && (
                             <span className="ml-3 border border-black p-1 text-lg font-bold"> {priceFormatter.format(precioTotal)} </span>
                         )}
+                    </div>
+
+                    <div className="m-2 mt-5">
+                        Notificaciones para el dia:
+                        <input
+                            type="text"
+                            className="w-[110px] border border-black p-1"
+                            maxLength={10}
+                            value={fecha}
+                            onChange={(e) => setFecha(e.target.value)}
+                        />
+                        <input type="button" value="Consultar" className="button m-2" disabled={fetching} onClick={fetchScba} />
+                        {notifications && (
+                            <div>
+                                {notifications.map((notif: any) => (
+                                    <div className="notif-slot">
+                                        {notif?.Organismo} <br />
+                                        {notif?.Caratula?.text} <br />
+                                        {notif?.Tramite} <br />
+                                        {notif?.AltaoDisponibilidad}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                        {notifications.length === 0 && !fetching && <div>No hay notificaciones para mostrar</div>}
                     </div>
                 </div>
             </div>

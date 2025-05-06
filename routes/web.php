@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 Route::middleware('local')->group(function () {
     Route::get('/web-artisan', [WebArtisanController::class, 'index']);
@@ -48,8 +49,11 @@ Route::get('/probar-bot', function () {
     return 'Job lanzado';
 });
 
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('auth-bot', [DashboardController::class, 'getScbaNotifications']);
+    Route::get('/scba-notifications', [DashboardController::class, 'getScbaNotifications']);
 
     Route::get('juzgados', function () {
         return Inertia::render('juzgados', ["juzgados" => Juzgado::all()]);

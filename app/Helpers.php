@@ -2,6 +2,8 @@
 // app/Helpers/TextHelper.php
 namespace App;
 
+use DateTime;
+
 class Helpers
 {
     public static function quitarAcentos(string $cadena): string
@@ -13,5 +15,11 @@ class Helpers
     {
         // Esto elimina todo lo que no sea letra
         return preg_replace('/[^a-zA-Z]/', '', $cadena);
+    }
+
+    public static function esFechaValida($fecha)
+    {
+        $d = DateTime::createFromFormat('d/m/Y', $fecha);
+        return $d && $d->format('d/m/Y') === $fecha;
     }
 }
