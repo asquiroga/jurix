@@ -42,7 +42,7 @@ class DashboardController extends Controller
                 'caratula' => '',
                 'tramites' => 'null',
                 'Desde' => $fecha,
-                'Hasta' => $fecha,
+                'Hasta' => '',
                 'domicilio' => "-1",
                 'departamento' => "-1",
                 'org' => "",
@@ -102,8 +102,6 @@ class DashboardController extends Controller
 
     public function getNotificationBody(Request $request)
     {
-        // https://notificaciones.scba.gov.ar/InterfazBootstrap/textonotificacion.aspx?idnot=115331705&fecha=2
-
         $response = Helpers::scbaLogin();
         if ($response->successful()) {
             $cookies = $response->cookies();

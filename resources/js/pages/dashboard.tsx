@@ -100,7 +100,7 @@ export default function Dashboard() {
                                         {notif?.body && (
                                             <div className="notif-body">
                                                 {notif.body.map((aLine: string) => (
-                                                    <span>{aLine}</span>
+                                                    <div className="paragraph">{aLine}</div>
                                                 ))}
                                             </div>
                                         )}

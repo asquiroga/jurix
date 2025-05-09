@@ -239,6 +239,10 @@ div.notif-body {
     animation: fadeUp 0.8s ease-out forwards;
 }
 
+div.notif-body .paragraph {
+    padding-bottom: 3px;
+}
+
 @keyframes fadeUp {
     to {
         opacity: 1;
