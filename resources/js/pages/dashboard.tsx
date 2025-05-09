@@ -25,6 +25,36 @@ const fechaActual = () => {
     const anio = hoy.getFullYear();
     return `${dia}/${mes}/${anio}`;
 };
+
+function imprimirItem(notif: any) {
+    const ventana: any = window.open('', '_blank');
+
+    const body = notif.body.join('<br/>');
+
+    ventana.document.write(`
+      <html>
+        <head>
+          <title>JURIX</title>
+          <style>
+            body: { padding: 1em; }
+            .body { margin-top: 2em; }
+            label { font-weight: bold; }
+          </style>
+        </head>
+        <body onload="window.print(); window.close();">
+            <div class="fecha"><label>FECHA:</label> ${notif?.AltaoDisponibilidad} </div>
+            <div class="organismo"><label>ORGANISMO:</label> ${notif?.Organismo} </div>
+            <div class="caratula"><label>CARATULA:</label> ${notif?.Caratula?.text} </div>
+            <div class="tramite"><label>TRAMITE:</label> ${notif?.Tramite} </div>
+            
+            <div class="body">${body}</div>
+
+        </body>
+      </html>
+    `);
+    ventana.document.close();
+}
+
 export default function Dashboard() {
     const { auth, precio_ius } = usePage().props;
     const [ius, setIus] = useState<number>(NaN);
@@ -102,6 +132,15 @@ export default function Dashboard() {
                                                 {notif.body.map((aLine: string) => (
                                                     <div className="paragraph">{aLine}</div>
                                                 ))}
+
+                                                <input
+                                                    type="button"
+                                                    value="Imprimir"
+                                                    className="small-button"
+                                                    onClick={(e) => {
+                                                        imprimirItem(notif);
+                                                    }}
+                                                />
                                             </div>
                                         )}
                                     </div>
