@@ -115,7 +115,6 @@ class DashboardController extends Controller
 
             $response = Http::withCookies($cookieArray, 'notificaciones.scba.gov.ar')
                 ->get(config('bot.scba.baseUrl') . $request->query('url'));
-            dd($response->body());
 
             $crawler = new Crawler($response->body());
 
