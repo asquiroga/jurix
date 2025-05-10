@@ -1,11 +1,19 @@
 import { type SharedData } from '@/types';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { useState } from 'react';
+const LoadingOverlay = ({ show }: { show: boolean }) => (
+    <div className={`welcome-overlay fixed inset-0 z-50 flex items-center justify-center ${show ? 'show' : ''}`}>
+        <div>Ingresando...</div>
+    </div>
+);
 
 export default function Welcome() {
     const { auth } = usePage<SharedData>().props;
+    const [loading, setLoading] = useState(false);
 
     return (
         <>
+            <LoadingOverlay show={loading} />
             <Head title="Bienvenido">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
@@ -22,10 +30,7 @@ export default function Welcome() {
                             </Link>
                         ) : (
                             <>
-                                <a
-                                    className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                                    href="/auth/redirect/google"
-                                >
+                                <a className="small-button" href="/auth/redirect/google" onClick={() => setLoading(true)}>
                                     Ingresar con Google!
                                 </a>
                             </>

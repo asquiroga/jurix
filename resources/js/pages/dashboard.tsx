@@ -2,6 +2,7 @@ import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
 import axios from 'axios';
+import { LoaderCircle } from 'lucide-react';
 import { useState } from 'react';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -76,21 +77,39 @@ export default function Dashboard() {
     const [fecha, setFecha] = useState<string>(fechaActual());
     const [fetching, setFetching] = useState<boolean>(false);
     const [notifications, setNotifications] = useState<any>([]);
+    const [fetchNotifError, setFetchNotifError] = useState<undefined | string>();
 
     const fetchScba = () => {
         setFetching(true);
-        axios.get('/scba-notifications?fecha=' + fecha).then((response) => {
-            setFetching(false);
-            setNotifications(response.data);
-        });
+        axios
+            .get('/scba-notifications?fecha=' + fecha)
+            .then((response) => {
+                setFetching(false);
+                setNotifications(response.data);
+            })
+            .catch((err) => {
+                setFetching(false);
+                console.log(err);
+                setFetchNotifError('No se pudo traer las notificaciones desde SCBA.');
+            });
     };
 
     const viewNotification = (notification: any) => {
         setFetching(true);
-        axios.get('/scba-get-notification?url=' + notification.Caratula.link).then((response) => {
-            setFetching(false);
-            notification.body = response.data;
-        });
+        notification.loading = true;
+        axios
+            .get('/scba-get-notification?url=' + notification.Caratula.link)
+            .then((response) => {
+                notification.body = response.data;
+            })
+            .catch((err) => {
+                console.log(err);
+                notification.error = 'Problema recuperando la notificacion!';
+            })
+            .finally(() => {
+                setFetching(false);
+                notification.loading = false;
+            });
     };
 
     const precioTotal = !isNaN(ius) ? ius * parseInt(precio_ius as string) : undefined;
@@ -122,6 +141,7 @@ export default function Dashboard() {
                             onChange={(e) => setFecha(e.target.value)}
                         />
                         <input type="button" value="Consultar" className="button m-2" disabled={fetching} onClick={fetchScba} />
+                        {fetchNotifError && <div> {fetchNotifError} </div>}
                         {notifications && (
                             <div>
                                 {notifications.map((notif: any) => (
@@ -131,8 +151,8 @@ export default function Dashboard() {
                                         <div className="caratula">{notif?.Caratula?.text} </div>
                                         <div className="tramite">{notif?.Tramite} </div>
 
-                                        <div className="mt-4">
-                                            {!notif.body && (
+                                        {!notif.body && (
+                                            <div className="mt-4 flex items-center space-x-2">
                                                 <input
                                                     type="button"
                                                     value="Ver Notificacion"
@@ -140,8 +160,10 @@ export default function Dashboard() {
                                                     disabled={fetching}
                                                     onClick={() => viewNotification(notif)}
                                                 />
-                                            )}
-                                        </div>
+                                                {fetching && notif.loading && <LoaderCircle className="animate-spin" />}
+                                                {notif.error && <div className="one-notif-error">{notif.error}</div>}
+                                            </div>
+                                        )}
                                         {notif?.body && (
                                             <div className="notif-body">
                                                 {notif.body.map((aLine: string) => (
