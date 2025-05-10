@@ -28,7 +28,7 @@ const fechaActual = () => {
 };
 
 const downloadPDF = async (notification: any) => {
-    const completeBody = notification.body.join('<br/>');
+    const completeBody = notification.body;
     const head: string = `
         <style>  
             label { font-weight: bold; }
@@ -101,6 +101,7 @@ export default function Dashboard() {
             .get('/scba-get-notification?url=' + notification.Caratula.link)
             .then((response) => {
                 notification.body = response.data;
+                console.log(notification.body);
             })
             .catch((err) => {
                 console.log(err);
@@ -166,9 +167,7 @@ export default function Dashboard() {
                                         )}
                                         {notif?.body && (
                                             <div className="notif-body">
-                                                {notif.body.map((aLine: string) => (
-                                                    <div className="paragraph">{aLine}</div>
-                                                ))}
+                                                <div dangerouslySetInnerHTML={{ __html: notif.body }} />
 
                                                 <input
                                                     type="button"

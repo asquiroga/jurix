@@ -118,6 +118,18 @@ class DashboardController extends Controller
 
             $crawler = new Crawler($response->body());
 
+            $crawler->filter("#bTexto p")->each(function ($paragraph) {
+                echo $paragraph->html();
+                echo "<br/>";
+            });
+
+            die();
+
+            // esto es viejo
+            dd($crawler->filter("#bTexto")->html());
+
+            dd($response->body());
+
             $result = [];
             $crawler->filter("#bTexto p")->each(function ($paragraph) use (&$result) {
                 $text = "";
