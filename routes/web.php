@@ -53,6 +53,7 @@ Route::get('/probar-bot', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('auth-bot', [DashboardController::class, 'getScbaNotifications']);
+    Route::post('pdf', [DashboardController::class, 'generatePdf']);
     Route::get('/scba-notifications', [DashboardController::class, 'getScbaNotifications']);
     Route::get('/scba-get-notification', [DashboardController::class, 'getNotificationBody']);
 

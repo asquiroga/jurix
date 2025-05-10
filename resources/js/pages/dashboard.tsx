@@ -26,37 +26,52 @@ const fechaActual = () => {
     return `${dia}/${mes}/${anio}`;
 };
 
-function imprimirItem(notif: any) {
-    const ventana: any = window.open('', '_blank');
-
-    const body = notif.body.join('<br/>');
-
-    ventana.document.write(`
-      <html>
-        <head>
-          <title>JURIX</title>
-          <style>
-            body: { padding: 1em; }
-            .body { margin-top: 2em; }
+const downloadPDF = async (notification: any) => {
+    const completeBody = notification.body.join('<br/>');
+    const head: string = `
+        <style>  
             label { font-weight: bold; }
-          </style>
-        </head>
-        <body onload="window.print(); window.close();">
-            <div class="fecha"><label>FECHA:</label> ${notif?.AltaoDisponibilidad} </div>
-            <div class="organismo"><label>ORGANISMO:</label> ${notif?.Organismo} </div>
-            <div class="caratula"><label>CARATULA:</label> ${notif?.Caratula?.text} </div>
-            <div class="tramite"><label>TRAMITE:</label> ${notif?.Tramite} </div>
+            .body { margin-top: 2em; }
+        </style>
+    `;
+    const body: string = `
+            <div class="fecha"><label>FECHA:</label> ${notification?.AltaoDisponibilidad} </div>
+            <div class="organismo"><label>ORGANISMO:</label> ${notification?.Organismo} </div>
+            <div class="caratula"><label>CARATULA:</label> ${notification?.Caratula?.text} </div>
+            <div class="tramite"><label>TRAMITE:</label> ${notification?.Tramite} </div>
             
-            <div class="body">${body}</div>
+            <div class="body"> ${completeBody}</div>
+    `;
+    const response = await fetch('/pdf', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as any)?.content,
+        },
+        body: JSON.stringify({
+            title: 'Notificacion',
+            head,
+            body,
+        }),
+    });
 
-        </body>
-      </html>
-    `);
-    ventana.document.close();
-}
+    if (!response.ok) {
+        console.error('Error al generar el PDF');
+        return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Notificacion.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+};
 
 export default function Dashboard() {
-    const { auth, precio_ius } = usePage().props;
+    const { precio_ius } = usePage().props;
     const [ius, setIus] = useState<number>(NaN);
     const [fecha, setFecha] = useState<string>(fechaActual());
     const [fetching, setFetching] = useState<boolean>(false);
@@ -135,10 +150,10 @@ export default function Dashboard() {
 
                                                 <input
                                                     type="button"
-                                                    value="Imprimir"
+                                                    value="PDF"
                                                     className="small-button"
                                                     onClick={(e) => {
-                                                        imprimirItem(notif);
+                                                        downloadPDF(notif);
                                                     }}
                                                 />
                                             </div>
