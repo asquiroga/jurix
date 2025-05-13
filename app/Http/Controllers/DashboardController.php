@@ -14,7 +14,12 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return Inertia::render('dashboard', ["precio_ius" => 38381]);
+        return Inertia::render('dashboard', []);
+    }
+
+    public function calculator()
+    {
+        return Inertia::render('calculator', ["precio_ius" => 38381]);
     }
 
     public function getScbaNotifications(Request $request)

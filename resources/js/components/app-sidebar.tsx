@@ -4,7 +4,7 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { AlignJustify, LayoutGrid } from 'lucide-react';
+import { AlignJustify, Calculator, LayoutGrid } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -27,6 +27,11 @@ const mainNavItems: NavItem[] = [
         title: 'Materias',
         href: '/materias',
         icon: AlignJustify,
+    },
+    {
+        title: 'Calculadora',
+        href: '/calculadora',
+        icon: Calculator,
     },
     // {
     //     title: 'Datos Globales',
