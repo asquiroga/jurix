@@ -116,7 +116,11 @@ class BotController extends Controller
                 echo "<br/>";
             });
 
-            echo $crawler->filter(".mostrarImpr .imgQr")->outerHtml();
+            $divsQr = $crawler->filter(".mostrarImpr .panel-body > div");
+            echo "<div class=\"scba-qr-wrapper\">\n";
+            echo $divsQr->eq(0)->outerHtml();
+            echo $divsQr->eq(1)->outerHtml();
+            echo "\n</div>";
 
             die();
         }

@@ -10,6 +10,10 @@
             font-size: 11px;
         }
 
+        .content-center {
+            text-align: center;
+        }
+
         h1 {
             color: #444;
         }
