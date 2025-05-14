@@ -364,3 +364,9 @@ div.notif-body .paragraph {
         opacity: 1;
     }
 }
+
+/* SCBA, esconder QR */
+
+img.imgQr {
+    display: none;
+}

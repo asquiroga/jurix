@@ -73,7 +73,7 @@ export default function Dashboard() {
     const fetchScba = () => {
         setFetching(true);
         axios
-            .get('/scba-notifications?fecha=' + fecha)
+            .get('/bot/scba-notifications?fecha=' + fecha)
             .then((response) => {
                 setFetching(false);
                 setNotifications(response.data);
@@ -89,7 +89,7 @@ export default function Dashboard() {
         setFetching(true);
         notification.loading = true;
         axios
-            .get('/scba-get-notification?url=' + notification.Caratula.link)
+            .get('/bot/scba-get-notification?url=' + notification.Caratula.link)
             .then((response) => {
                 notification.body = response.data;
                 console.log(notification.body);

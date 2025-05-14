@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BotController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MateriasController;
 use App\Http\Controllers\WebArtisanController;
@@ -54,8 +55,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('auth-bot', [DashboardController::class, 'getScbaNotifications']);
     Route::post('pdf', [DashboardController::class, 'generatePdf']);
-    Route::get('/scba-notifications', [DashboardController::class, 'getScbaNotifications']);
-    Route::get('/scba-get-notification', [DashboardController::class, 'getNotificationBody']);
+    Route::get('/bot/scba-notifications', [BotController::class, 'getScbaNotifications']);
+    Route::get('/bot/scba-get-notification', [BotController::class, 'getScbaNotificationBody']);
 
     Route::get('juzgados', function () {
         return Inertia::render('juzgados', ["juzgados" => Juzgado::all()]);
