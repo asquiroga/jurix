@@ -1,4 +1,5 @@
 import AppLayout from '@/layouts/app-layout';
+import { clientSideDownload } from '@/lib/utils';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
@@ -20,55 +21,52 @@ const fechaActual = () => {
     return `${dia}/${mes}/${anio}`;
 };
 
-const downloadPDF = async (notification: any) => {
-    const completeBody = notification.body;
-    const head: string = `
-        <style>  
-            label { font-weight: bold; }
-            .body { margin-top: 2em; }
-        </style>
-    `;
-    const body: string = `
-            <div class="fecha"><label>FECHA:</label> ${notification?.AltaoDisponibilidad} </div>
-            <div class="organismo"><label>ORGANISMO:</label> ${notification?.Organismo} </div>
-            <div class="caratula"><label>CARATULA:</label> ${notification?.Caratula?.text} </div>
-            <div class="tramite"><label>TRAMITE:</label> ${notification?.Tramite} </div>
-            
-            <div class="body"> ${completeBody}</div>
-    `;
-    const response = await fetch('/pdf', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as any)?.content,
-        },
-        body: JSON.stringify({
-            title: 'Notificacion',
-            head,
-            body,
-        }),
-    });
-
-    if (!response.ok) {
-        console.error('Error al generar el PDF');
-        return;
-    }
-
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'Notificacion.pdf';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-};
-
 export default function Dashboard() {
     const [fecha, setFecha] = useState<string>(fechaActual());
     const [fetching, setFetching] = useState<boolean>(false);
     const [notifications, setNotifications] = useState<any>([]);
     const [fetchNotifError, setFetchNotifError] = useState<undefined | string>();
+    const [gettingPdf, setGettingPdf] = useState(false);
+
+    const downloadPDF = async (notification: any) => {
+        setGettingPdf(true);
+        const completeBody = notification.body;
+        const head: string = `
+            <style>  
+                label { font-weight: bold; }
+                .body { margin-top: 2em; }
+            </style>
+        `;
+        const body: string = `
+                <div class="fecha"><label>FECHA:</label> ${notification?.AltaoDisponibilidad} </div>
+                <div class="organismo"><label>ORGANISMO:</label> ${notification?.Organismo} </div>
+                <div class="caratula"><label>CARATULA:</label> ${notification?.Caratula?.text} </div>
+                <div class="tramite"><label>TRAMITE:</label> ${notification?.Tramite} </div>
+                
+                <div class="body"> ${completeBody}</div>
+        `;
+        const response = await fetch('/pdf', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as any)?.content,
+            },
+            body: JSON.stringify({
+                title: 'Notificacion',
+                head,
+                body,
+            }),
+        });
+
+        setGettingPdf(false);
+        if (!response.ok) {
+            console.error('Error al generar el PDF');
+            return;
+        }
+
+        const blob = await response.blob();
+        clientSideDownload(blob, 'Notificacion.pdf');
+    };
 
     const fetchScba = () => {
         setFetching(true);
@@ -149,6 +147,7 @@ export default function Dashboard() {
                                                 <input
                                                     type="button"
                                                     value="PDF"
+                                                    disabled={gettingPdf}
                                                     className="small-button"
                                                     onClick={(e) => {
                                                         downloadPDF(notif);
