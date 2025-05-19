@@ -30,21 +30,4 @@ class Helpers
         [$dia, $mes, $anio] = explode('/', $fecha);
         return checkdate((int)$mes, (int)$dia, (int)$anio);
     }
-
-    public static function scbaLogin()
-    {
-        $loginPayload = [
-            'domicilioElectronico' => env("SCBA_USER"),
-            'pass' => env("SCBA_PASS"),
-            'url' => '',
-        ];
-
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ])
-            ->post(config("bot.scba.loginUrl"), $loginPayload);
-
-        return $response;
-    }
 }

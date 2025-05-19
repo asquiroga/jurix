@@ -23,10 +23,14 @@ const fechaActual = () => {
 
 export default function Dashboard() {
     const [fecha, setFecha] = useState<string>(fechaActual());
-    const [fetching, setFetching] = useState<boolean>(false);
-    const [notifications, setNotifications] = useState<any>([]);
-    const [fetchNotifError, setFetchNotifError] = useState<undefined | string>();
+    const [fetchingScba, setFetchingScba] = useState<boolean>(false);
+    const [scbaNotifications, setScbaNotifications] = useState<any>([]);
+    const [fetchScbaNotifError, setFetchScbaNotifError] = useState<undefined | string>();
     const [gettingPdf, setGettingPdf] = useState(false);
+
+    const [fetchingPjn, setFetchingPjn] = useState<boolean>(false);
+    const [fetchPjnNotifError, setFetchPjnNotifError] = useState<undefined | string>();
+    const [pjnNotifications, setPjnNotifications] = useState<any>([]);
 
     const downloadPDF = async (notification: any) => {
         setGettingPdf(true);
@@ -68,23 +72,43 @@ export default function Dashboard() {
         clientSideDownload(blob, 'Notificacion.pdf');
     };
 
+    const fetchAll = () => {
+        fetchScba();
+        fetchPjn();
+    };
+
+    const fetchPjn = () => {
+        setFetchingPjn(true);
+        axios
+            .get('/bot/pjn-notifications?fecha=' + fecha)
+            .then((response) => {
+                setFetchingPjn(false);
+                setPjnNotifications(response.data);
+            })
+            .catch((err) => {
+                setFetchingPjn(false);
+                console.log(err);
+                setFetchPjnNotifError('No se pudo traer las notificaciones desde SCBA.');
+            });
+    };
+
     const fetchScba = () => {
-        setFetching(true);
+        setFetchingScba(true);
         axios
             .get('/bot/scba-notifications?fecha=' + fecha)
             .then((response) => {
-                setFetching(false);
-                setNotifications(response.data);
+                setFetchingScba(false);
+                setScbaNotifications(response.data);
             })
             .catch((err) => {
-                setFetching(false);
+                setFetchingScba(false);
                 console.log(err);
-                setFetchNotifError('No se pudo traer las notificaciones desde SCBA.');
+                setFetchScbaNotifError('No se pudo traer las notificaciones desde SCBA.');
             });
     };
 
     const viewNotification = (notification: any) => {
-        setFetching(true);
+        setFetchingScba(true);
         notification.loading = true;
         axios
             .get('/bot/scba-get-notification?url=' + notification.Caratula.link)
@@ -97,7 +121,7 @@ export default function Dashboard() {
                 notification.error = 'Problema recuperando la notificacion!';
             })
             .finally(() => {
-                setFetching(false);
+                setFetchingScba(false);
                 notification.loading = false;
             });
     };
@@ -116,50 +140,70 @@ export default function Dashboard() {
                             value={fecha}
                             onChange={(e) => setFecha(e.target.value)}
                         />
-                        <input type="button" value="Consultar" className="button m-2" disabled={fetching} onClick={fetchScba} />
-                        {fetchNotifError && <div> {fetchNotifError} </div>}
-                        {notifications && (
-                            <div>
-                                {notifications.map((notif: any) => (
-                                    <div className="notif-slot">
-                                        <div className="fecha">{notif?.AltaoDisponibilidad} </div>
-                                        <div className="organismo">{notif?.Organismo} </div>
-                                        <div className="caratula">{notif?.Caratula?.text} </div>
-                                        <div className="tramite">{notif?.Tramite} </div>
+                        <input type="button" value="Consultar" className="button m-2" disabled={fetchingScba} onClick={fetchAll} />
+                        <div>
+                            <h2 className="titulo-animado">SCBA</h2>
+                            {fetchScbaNotifError && <div> {fetchScbaNotifError} </div>}
+                            {scbaNotifications && (
+                                <div>
+                                    {scbaNotifications.map((notif: any) => (
+                                        <div className="notif-slot">
+                                            <div className="fecha">{notif?.AltaoDisponibilidad} </div>
+                                            <div className="organismo">{notif?.Organismo} </div>
+                                            <div className="caratula">{notif?.Caratula?.text} </div>
+                                            <div className="tramite">{notif?.Tramite} </div>
 
-                                        {!notif.body && (
-                                            <div className="mt-4 flex items-center space-x-2">
-                                                <input
-                                                    type="button"
-                                                    value="Ver Notificacion"
-                                                    className="small-button"
-                                                    disabled={fetching}
-                                                    onClick={() => viewNotification(notif)}
-                                                />
-                                                {fetching && notif.loading && <LoaderCircle className="animate-spin" />}
-                                                {notif.error && <div className="one-notif-error">{notif.error}</div>}
-                                            </div>
-                                        )}
-                                        {notif?.body && (
-                                            <div className="notif-body">
-                                                <div dangerouslySetInnerHTML={{ __html: notif.body }} />
+                                            {!notif.body && (
+                                                <div className="mt-4 flex items-center space-x-2">
+                                                    <input
+                                                        type="button"
+                                                        value="Ver Notificacion"
+                                                        className="small-button"
+                                                        disabled={fetchingScba}
+                                                        onClick={() => viewNotification(notif)}
+                                                    />
+                                                    {fetchingScba && notif.loading && <LoaderCircle className="animate-spin" />}
+                                                    {notif.error && <div className="one-notif-error">{notif.error}</div>}
+                                                </div>
+                                            )}
+                                            {notif?.body && (
+                                                <div className="notif-body">
+                                                    <div dangerouslySetInnerHTML={{ __html: notif.body }} />
 
-                                                <input
-                                                    type="button"
-                                                    value="PDF"
-                                                    disabled={gettingPdf}
-                                                    className="small-button"
-                                                    onClick={(e) => {
-                                                        downloadPDF(notif);
-                                                    }}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                        {notifications.length === 0 && !fetching && <div>No hay notificaciones para mostrar</div>}
+                                                    <input
+                                                        type="button"
+                                                        value="PDF"
+                                                        disabled={gettingPdf}
+                                                        className="small-button"
+                                                        onClick={(e) => {
+                                                            downloadPDF(notif);
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                            {scbaNotifications.length === 0 && !fetchScbaNotifError && !fetchingScba && <div>No hay notificaciones SCBA</div>}
+
+                            <h2 className="titulo-animado">PJN</h2>
+                            {fetchPjnNotifError && <div> {fetchPjnNotifError} </div>}
+                            {pjnNotifications && (
+                                <div>
+                                    {pjnNotifications.map((pjnNotif: any) => (
+                                        <div className="notif-slot">
+                                            <div>Expediente: {pjnNotif.expediente}</div>
+                                            <div>Dependencia: {pjnNotif.dependencia}</div>
+                                            <div>Situacion: {pjnNotif.situacion}</div>
+                                            <div>Ult. Actualizacion: {pjnNotif.ultimaActualizacion}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {pjnNotifications.length === 0 && !fetchPjnNotifError && !fetchingPjn && <div>No hay notificaciones TJN</div>}
+                        </div>
                     </div>
                 </div>
             </div>

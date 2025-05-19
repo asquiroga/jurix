@@ -55,8 +55,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('auth-bot', [DashboardController::class, 'getScbaNotifications']);
     Route::post('pdf', [DashboardController::class, 'generatePdf']);
+
+    // Bots
     Route::get('/bot/scba-notifications', [BotController::class, 'getScbaNotifications']);
     Route::get('/bot/scba-get-notification', [BotController::class, 'getScbaNotificationBody']);
+    Route::get('/bot/pjn-notifications', [BotController::class, 'pjn']);
+
 
     Route::get('juzgados', function () {
         return Inertia::render('juzgados', ["juzgados" => Juzgado::all()]);
