@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers;
+use App\Helpers\PjnBotHelper;
 use App\Helpers\ScbaBotHelper;
 use DateTime;
 use Illuminate\Http\Request;
@@ -10,6 +11,9 @@ use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
+use Illuminate\Support\Facades\Session;
+
+use function PHPUnit\Framework\stringContains;
 
 class BotController extends Controller
 {
@@ -139,68 +143,17 @@ class BotController extends Controller
             $fromFecha = date('Ymd');
         }
 
-        // Crear un jar para almacenar cookies
-        $cookieJar = new CookieJar();
-
-        // Crear el cliente con el jar
-        $client = new Client([
-            'cookies' => $cookieJar,
-            'allow_redirects' => [
-                'max'             => 10,
-                'strict'          => false,
-                'referer'         => false,
-                'protocols'       => ['http', 'https'],
-                'track_redirects' => false
-            ],
-        ]);
-
-        // Hacer el primer GET
-        $url = "https://sso.pjn.gov.ar/auth/realms/pjn/protocol/openid-connect/auth?client_id=pjn-portal&redirect_uri=https%3A%2F%2Fportalpjn.pjn.gov.ar%2F&state=2a866888-ae76-40ac-86dc-ff7a7c026ae2&response_mode=fragment&response_type=code&scope=openid&nonce=3d9b2247-a081-4e56-8661-eb77cfc18c9c";
-        $response = $client->get($url);
-
-        $crawler = new Crawler($response->getBody()->getContents());
-
-        $postUrl = $crawler->filter("form#kc-form-login")->attr('action');
-        $response = $client->post($postUrl, [
-            'form_params' => [
-                'username' => '20377107048',
-                'password' => 'Estudiopjn',
-            ],
-        ]);
-
-        $url = "https://scw.pjn.gov.ar/scw/consultaListaRelacionados.seam";
-
-        $response = $client->get($url);
-        $response = $client->get($url);
-
-        $crawler = new Crawler($response->getBody()->getContents());
-        $input = $crawler->filter('input[name="javax.faces.ViewState"]');
-        $facesState = $input->attr('value');
-
-        $response = $client->post($url, [
-            'form_params' => [
-                'j_idt150:order_by_form' => 'j_idt150:order_by_form',
-                'j_idt150:order_by_form:camara' => 'FECHA',
-                'javax.faces.ViewState' => $facesState,
-                'j_idt150:order_by_form:j_idt165' => 'j_idt150:order_by_form:j_idt165'
-            ]
-        ]);
+        [$client, $response, $cookieJar] = PjnBotHelper::pjnLogin();
+        [$response] = PjnBotHelper::listarPorFecha($client, $cookieJar);
 
         $crawler = new Crawler($response->getBody()->getContents());
 
         $table = $crawler->filter("form > table");
 
-        $thIndex = 0;  // el nth-hijo del TH "Ult. Act."
-        $table->filter("thead th")->each(function ($th, $i) use (&$thIndex) {
-            if (str_contains($th->html(), "Act.")) {
-                $thIndex = $i;
-            }
-        });
-
-        $table = $crawler->filter("form > table");
-
+        $thIndex = PjnBotHelper::getColumnUltActIndex($table);
         $thIndex++;
 
+        $table = $crawler->filter("form > table");
         $result = [];
         $crawler->filter("form > table tbody tr")->each(function (Crawler $tr) use ($thIndex, $fromFecha, &$result) {
             $td = $tr->filter("td:nth-child($thIndex)");
@@ -209,13 +162,69 @@ class BotController extends Controller
             if ($fechaString >= $fromFecha) {
                 $thLabels = ["expediente", "dependencia", "caratula", "situacion", "ultimaActualizacion"];
                 $current = [];
-                $tr->filter("td")->each(function ($td, $i) use (&$current, $thLabels) {
+                $tr->filter("td")->each(function ($td, $i) use (&$current, &$thLabels) {
                     if ($i < 5)
                         $current[$thLabels[$i]] = $td->text();
                 });
                 array_push($result, $current);
             }
         });
+        return $result;
+    }
+
+    public function pjnExpediente(Request $request)
+    {
+        $fromFecha = PjnBotHelper::getFechaFromRequest($request);
+        $client = PjnBotHelper::regenerateClientFromSession();
+        $facesState = Session::get("faces.viewstate");
+
+        $response = $client->post(config("bot.pjn.listar"), [
+            'form_params' => [
+                'javax.faces.ViewState' => $facesState,
+                'tablaConsultaLista:tablaConsultaForm' => 'tablaConsultaLista:tablaConsultaForm',
+                'tablaConsultaLista:tablaConsultaForm:j_idt179:dataTable:0:j_idt230' => 'tablaConsultaLista:tablaConsultaForm:j_idt179:dataTable:0:j_idt230'
+            ]
+        ]);
+
+        $history = $response->getHeader('X-Guzzle-Redirect-History');
+        $last = end($history);
+        if (str_contains($last, "homePrivado.seam")) {
+            // re-login
+            die("re-login");
+        }
+
+
+        $crawler = new Crawler($response->getBody()->getContents());
+
+        $headers = ["Acciones", "Oficina", "Fecha", "Tipo", "Descripcion", "AFS"];
+
+        $result = [];
+        $crawler->filter('[id="expediente:action-table"] tbody tr')
+            ->each(function ($tr) use ($headers, &$result, $fromFecha) {
+                $current = [];
+                $fechaTd = $tr->filter("td:nth-child(3) span:nth-child(2)");
+                $fechaString = DateTime::createFromFormat('d/m/Y', $fechaTd->text())->format("Ymd");
+                if ($fechaString < $fromFecha)
+                    return;
+
+                $tr->filter("td")->each(function ($td, $i) use ($headers, &$current) {
+                    if ($i >= 1 && $i <= 4) {
+                        $current[$headers[$i]] = $td->filter("span:last-of-type")->text();
+                    } else {
+                        if ($i == 0) {
+                            $anchors = $td->filter("a");
+                            if ($anchors->count() > 0) {
+                                $current["link"] = "https://scw.pjn.gov.ar/" . $anchors->first()->attr('href');
+                            }
+                        } else {
+
+                            $current[$headers[$i]] = $td->text();
+                        }
+                    }
+                });
+                array_push($result, $current);
+            });
+
         return $result;
     }
 }

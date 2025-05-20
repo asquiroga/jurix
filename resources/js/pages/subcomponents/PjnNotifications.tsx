@@ -47,7 +47,7 @@ export const PjnNotifications = ({ fecha }: { fecha: string }) => {
             )}
 
             {loadingPjn && <div>Cargando...</div>}
-            {fecha && pjnNotifications.length === 0 && !fetchPjnNotifError && !loadingPjn && <div>No hay notificaciones TJN</div>}
+            {fecha && pjnNotifications.length === 0 && !fetchPjnNotifError && !loadingPjn && <div>No hay notificaciones PJN</div>}
         </div>
     );
 };

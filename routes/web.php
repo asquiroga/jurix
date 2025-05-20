@@ -60,6 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/bot/scba-notifications', [BotController::class, 'getScbaNotifications']);
     Route::get('/bot/scba-get-notification', [BotController::class, 'getScbaNotificationBody']);
     Route::get('/bot/pjn-notifications', [BotController::class, 'pjn']);
+    Route::get('/bot/pjn-expediente', [BotController::class, 'pjnExpediente']);
 
 
     Route::get('juzgados', function () {

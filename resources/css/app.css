@@ -403,6 +403,10 @@ div.notif-body .paragraph {
     text-align: center;
 }
 
+.dashboard-datepicker-wrapper > div:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
 .dashboard-date-picker {
     top: 5px;
     text-align: center;
