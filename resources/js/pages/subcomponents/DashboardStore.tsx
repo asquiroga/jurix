@@ -10,6 +10,6 @@ interface DashboardState {
 export const useDashboardStore = create<DashboardState>((set) => ({
     loadingPjn: false,
     loadingScba: false,
-    setLoadingScba: (value) => set({ loadingPjn: value }),
-    setLoadingPjn: (value) => set({ loadingScba: value }),
+    setLoadingScba: (value) => set({ loadingScba: value }),
+    setLoadingPjn: (value) => set({ loadingPjn: value }),
 }));

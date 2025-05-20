@@ -398,3 +398,45 @@ div.notif-body .paragraph {
         left 0.5s ease;
     border-radius: 2px;
 }
+
+.dashboard-datepicker-wrapper {
+    text-align: center;
+}
+
+.dashboard-date-picker {
+    top: 5px;
+    text-align: center;
+    margin-left: 1em;
+}
+
+.dashboard-date-selected {
+    margin-top: 0.5em;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+.dashboard-date-picker > div {
+    padding: 3px 8px;
+}
+
+.dashboard-date-picker > div > div {
+    display: none;
+}
+
+.fecha-animada {
+    animation-fill-mode: forwards;
+}
+
+.fecha-animada.animar {
+    animation: parpadeo 0.8s ease forwards;
+}
+
+@keyframes parpadeo {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
