@@ -45,6 +45,7 @@ export default function Dashboard() {
                         <div className="dashboard-datepicker-wrapper">
                             <span>Seleccione el dia:</span>
                             <DatePicker
+                                locale={'es'}
                                 onChange={handleDateChange}
                                 clearIcon={null}
                                 format="d/M/y"
