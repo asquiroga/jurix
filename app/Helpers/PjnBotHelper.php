@@ -43,6 +43,9 @@ class PjnBotHelper
             ],
         ]);
 
+        dd($response->getBody()->getContents());
+        die();
+
         return [$client, $response, $cookieJar];
     }
 
