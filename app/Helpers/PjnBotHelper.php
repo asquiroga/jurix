@@ -43,9 +43,6 @@ class PjnBotHelper
             ],
         ]);
 
-        dd($response->getBody()->getContents());
-        die();
-
         return [$client, $response, $cookieJar];
     }
 
@@ -56,10 +53,7 @@ class PjnBotHelper
 
         $crawler = new Crawler($response->getBody()->getContents());
         $input = $crawler->filter('input[name="javax.faces.ViewState"]');
-        if ($input->count() == 0) {
-            echo $response->getBody()->getContents();
-            die();
-        }
+
         $facesState = $input->attr('value');
         Session::put("faces.viewstate", $facesState);
         Session::put("bot-pjn-cookies", serialize($cookieJar));
