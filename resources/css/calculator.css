@@ -1,0 +1,19 @@
+.ius-input {
+    border: 1px solid black;
+    width: 50px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 8px;
+}
+
+.ius-final-price {
+    margin-top: 2em;
+}
+
+.ius-final-price span.price {
+    font-weight: bold;
+}
+
+.ius-input-wrapper {
+    margin-top: 1em;
+}
