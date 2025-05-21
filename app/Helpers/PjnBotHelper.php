@@ -16,10 +16,8 @@ class PjnBotHelper
 
     public static function pjnLogin()
     {
-        // Crear un jar para almacenar cookies
         $cookieJar = new CookieJar();
 
-        // Crear el cliente con el jar
         $client = new Client([
             'cookies' => $cookieJar,
             'allow_redirects' => [
@@ -31,11 +29,19 @@ class PjnBotHelper
             ],
         ]);
 
+        $response = self::pjnLoginWithClient($client);
+
+        return [$client, $response, $cookieJar];
+    }
+
+    public static function pjnLoginWithClient($client)
+    {
         $response = $client->get(config("bot.pjn.loginUrl"));
 
         $crawler = new Crawler($response->getBody()->getContents());
 
         $postUrl = $crawler->filter("form#kc-form-login")->attr('action');
+
         $response = $client->post($postUrl, [
             'form_params' => [
                 'username' => env("PJN_USER"),
@@ -43,7 +49,7 @@ class PjnBotHelper
             ],
         ]);
 
-        return [$client, $response, $cookieJar];
+        return $response;
     }
 
     public static function listarPorFecha($client, $cookieJar)
@@ -102,13 +108,16 @@ class PjnBotHelper
         return $request->query("position");
     }
 
+    public static function pjnCookies()
+    {
+        return unserialize(Session::get('bot-pjn-cookies'));
+    }
+
     public static function regenerateClientFromSession()
     {
-        $cookieJar = unserialize(Session::get('bot-pjn-cookies'));
-
         // Crear el cliente con el jar
         return new Client([
-            'cookies' => $cookieJar,
+            'cookies' => self::pjnCookies(),
             'allow_redirects' => [
                 'max'             => 10,
                 'strict'          => false,

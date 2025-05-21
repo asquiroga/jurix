@@ -192,9 +192,20 @@ class BotController extends Controller
         $crawler = new Crawler($response->getBody()->getContents());
         $title = strtolower($crawler->filter("head title")->text());
 
+        $relogged = false;
         if (str_contains(strtolower($title), "inicie sesi")) {
-            // BotController::pjn($request);
-            die();
+            //Relogin!
+            [$client, $response, $cookieJar] = PjnBotHelper::pjnLogin();
+            [$response, $facesState] = PjnBotHelper::listarPorFecha($client, $cookieJar);
+            $response = $client->post(config("bot.pjn.listar"), [
+                'form_params' => [
+                    'javax.faces.ViewState' => $facesState,
+                    'tablaConsultaLista:tablaConsultaForm' => 'tablaConsultaLista:tablaConsultaForm',
+                    $positionKey => $positionKey
+                ]
+            ]);
+            $crawler = new Crawler($response->getBody()->getContents());
+            $relogged = true;
         }
 
         $headers = ["Acciones", "Oficina", "Fecha", "Tipo", "Descripcion", "AFS"];
@@ -226,6 +237,8 @@ class BotController extends Controller
                 array_push($result, $current);
             });
 
-        return $result;
+        if ($relogged)
+            return response()->json($result)->header('X-Jurix-Bot-Relogin', 'true');
+        return response()->json($result);
     }
 }
