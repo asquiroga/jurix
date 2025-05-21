@@ -55,7 +55,7 @@ class PjnBotHelper
         $input = $crawler->filter('input[name="javax.faces.ViewState"]');
         $facesState = $input->attr('value');
         Session::put("faces.viewstate", $facesState);
-        Session::put("bot-cookies", serialize($cookieJar));
+        Session::put("bot-pjn-cookies", serialize($cookieJar));
 
         $response = $client->post(config("bot.pjn.listar"), [
             'form_params' => [
@@ -90,9 +90,20 @@ class PjnBotHelper
         return date('Ymd');
     }
 
+    public static function getPositionFromRequest(Request $request)
+    {
+        if (!$request->has('position')) {
+            abort(response()->json([
+                'message' => 'Falta el parámetro nombre'
+            ], 422));
+        }
+
+        return $request->query("position");
+    }
+
     public static function regenerateClientFromSession()
     {
-        $cookieJar = unserialize(Session::get('bot-cookies'));
+        $cookieJar = unserialize(Session::get('bot-pjn-cookies'));
 
         // Crear el cliente con el jar
         return new Client([

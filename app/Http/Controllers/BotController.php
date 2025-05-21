@@ -11,12 +11,19 @@ use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
 
 use function PHPUnit\Framework\stringContains;
 
 class BotController extends Controller
 {
+
+    public function test()
+    {
+        $wtf = "eyJpdiI6ImRobEJxd1NaazI4RUppQ01sWUVDMGc9PSIsInZhbHVlIjoiN0dCTi9NMGdaOUJGUCt2MzU1R3FTUT09IiwibWFjIjoiYjY5ZWY5MWZhYzI5ZDkwZjk1M2JlOGRhNzliNGFjNTNjYzM5NDI0OTZmMThhMjc5ZTQxMjcwM2FiMTdhNTg2NCIsInRhZyI6IiJ9";
+        echo Crypt::decryptString($wtf);
+    }
 
     public function getScbaNotifications(Request $request)
     {
@@ -136,13 +143,7 @@ class BotController extends Controller
 
     public function pjn(Request $request)
     {
-        $fromFecha = "";
-        if ($request->has('fecha') && Helpers::esFechaValida($request->query('fecha'))) {
-            $fromFecha = DateTime::createFromFormat("d/m/Y", $request->query('fecha'))->format("Ymd");
-        } else {
-            $fromFecha = date('Ymd');
-        }
-
+        $fromFecha = PjnBotHelper::getFechaFromRequest($request);
         [$client, $response, $cookieJar] = PjnBotHelper::pjnLogin();
         [$response] = PjnBotHelper::listarPorFecha($client, $cookieJar);
 
@@ -155,13 +156,13 @@ class BotController extends Controller
 
         $table = $crawler->filter("form > table");
         $result = [];
-        $crawler->filter("form > table tbody tr")->each(function (Crawler $tr) use ($thIndex, $fromFecha, &$result) {
+        $crawler->filter("form > table tbody tr")->each(function (Crawler $tr, $trIndex) use ($thIndex, $fromFecha, &$result) {
             $td = $tr->filter("td:nth-child($thIndex)");
             $fechaString = DateTime::createFromFormat('d/m/Y', $td->text())->format("Ymd");
 
             if ($fechaString >= $fromFecha) {
                 $thLabels = ["expediente", "dependencia", "caratula", "situacion", "ultimaActualizacion"];
-                $current = [];
+                $current = ["faces_position" => $trIndex];
                 $tr->filter("td")->each(function ($td, $i) use (&$current, &$thLabels) {
                     if ($i < 5)
                         $current[$thLabels[$i]] = $td->text();
@@ -175,26 +176,26 @@ class BotController extends Controller
     public function pjnExpediente(Request $request)
     {
         $fromFecha = PjnBotHelper::getFechaFromRequest($request);
+        $position = PjnBotHelper::getPositionFromRequest($request);
         $client = PjnBotHelper::regenerateClientFromSession();
         $facesState = Session::get("faces.viewstate");
 
+        $positionKey = "tablaConsultaLista:tablaConsultaForm:j_idt179:dataTable:{$position}:j_idt230";
         $response = $client->post(config("bot.pjn.listar"), [
             'form_params' => [
                 'javax.faces.ViewState' => $facesState,
                 'tablaConsultaLista:tablaConsultaForm' => 'tablaConsultaLista:tablaConsultaForm',
-                'tablaConsultaLista:tablaConsultaForm:j_idt179:dataTable:0:j_idt230' => 'tablaConsultaLista:tablaConsultaForm:j_idt179:dataTable:0:j_idt230'
+                $positionKey => $positionKey
             ]
         ]);
 
-        $history = $response->getHeader('X-Guzzle-Redirect-History');
-        $last = end($history);
-        if (str_contains($last, "homePrivado.seam")) {
-            // re-login
-            die("re-login");
-        }
-
-
         $crawler = new Crawler($response->getBody()->getContents());
+        $title = strtolower($crawler->filter("head title")->text());
+
+        if (str_contains(strtolower($title), "inicie sesi")) {
+            // BotController::pjn($request);
+            die();
+        }
 
         $headers = ["Acciones", "Oficina", "Fecha", "Tipo", "Descripcion", "AFS"];
 

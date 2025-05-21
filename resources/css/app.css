@@ -210,13 +210,21 @@
 }
 
 div.notif-slot {
-    margin: 1em;
+    margin: 0.5em 0;
     border: 1px solid gray;
-    padding: 1em;
+    padding: 0.5em 1em;
 }
 
 div.notif-slot:nth-child(even) {
-    background-color: #f0f0f9;
+    background-color: #f8f8f8;
+}
+
+div.notif-slot.pjn .expediente {
+    color: gray;
+}
+
+div.notif-slot.pjn .caratula {
+    font-weight: bold;
 }
 
 div.notif-slot .fecha {
@@ -230,9 +238,10 @@ div.notif-slot .tramite {
 }
 
 div.notif-body {
-    background: #d8fbf0;
-    padding: 5px 13px;
-    border-radius: 10px;
+    background-color: #f0fefb;
+    padding: 10px 13px;
+    border-radius: 5px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 
     opacity: 0;
     transform: translateY(20px);
@@ -443,4 +452,20 @@ div.notif-body .paragraph {
     50% {
         opacity: 0.3;
     }
+}
+
+div.pjn-notification-details {
+    margin-top: 1em;
+}
+div.pjn-notification {
+    margin: 0.8em;
+    border: 0px solid #707070;
+    padding: 0.4em;
+    font-size: 0.8em;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background-color: #f0fefb;
+}
+
+div.pjn-notification:nth-child(even) {
+    background-color: #d8fbf0;
 }

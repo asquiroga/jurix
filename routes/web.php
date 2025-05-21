@@ -62,6 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/bot/pjn-notifications', [BotController::class, 'pjn']);
     Route::get('/bot/pjn-expediente', [BotController::class, 'pjnExpediente']);
 
+    Route::get('/bot/test', [BotController::class, 'test']);
 
     Route::get('juzgados', function () {
         return Inertia::render('juzgados', ["juzgados" => Juzgado::all()]);
