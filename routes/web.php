@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\MateriasController;
 use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\WebArtisanController;
@@ -56,6 +57,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('auth-bot', [DashboardController::class, 'getScbaNotifications']);
     Route::post('pdf', [UtilsController::class, 'generatePdf']);
+
+    //Log
+    Route::get('/system/tail-log', [LogController::class, 'showLastLines']);
 
     // Bots
     Route::get('/bot/scba-notifications', [BotController::class, 'getScbaNotifications']);

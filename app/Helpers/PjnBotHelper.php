@@ -7,7 +7,6 @@ use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\DomCrawler\Crawler;
 

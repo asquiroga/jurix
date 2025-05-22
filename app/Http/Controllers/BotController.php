@@ -9,12 +9,8 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
-use GuzzleHttp\Client;
-use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Session;
-
-use function PHPUnit\Framework\stringContains;
 
 class BotController extends Controller
 {
