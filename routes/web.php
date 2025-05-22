@@ -3,6 +3,7 @@
 use App\Http\Controllers\BotController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MateriasController;
+use App\Http\Controllers\UtilsController;
 use App\Http\Controllers\WebArtisanController;
 use App\Jobs\IusPriceExtractor;
 use App\Models\Juzgado;
@@ -54,7 +55,7 @@ Route::get('/probar-bot', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('auth-bot', [DashboardController::class, 'getScbaNotifications']);
-    Route::post('pdf', [DashboardController::class, 'generatePdf']);
+    Route::post('pdf', [UtilsController::class, 'generatePdf']);
 
     // Bots
     Route::get('/bot/scba-notifications', [BotController::class, 'getScbaNotifications']);
