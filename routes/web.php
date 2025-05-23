@@ -1,18 +1,16 @@
 <?php
 
-use App\Http\Controllers\BotController;
+use App\Http\Controllers\Bots\BotController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LogController;
+use App\Http\Controllers\System\LogController;
 use App\Http\Controllers\MateriasController;
 use App\Http\Controllers\UtilsController;
-use App\Http\Controllers\WebArtisanController;
-use App\Jobs\IusPriceExtractor;
+use App\Http\Controllers\System\WebArtisanController;
 use App\Models\Juzgado;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Request;
 
 Route::middleware('local')->group(function () {
     Route::get('/web-artisan', [WebArtisanController::class, 'index']);
@@ -45,13 +43,6 @@ Route::get('/auth/callback/google', function () {
 Route::get('/', function () {
     return Inertia::render('welcome');
 })->name('home');
-
-
-Route::get('/probar-bot', function () {
-    IusPriceExtractor::dispatch();
-    return 'Job lanzado';
-});
-
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

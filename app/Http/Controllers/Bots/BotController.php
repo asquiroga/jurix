@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Bots;
 
 use App\Helpers;
 use App\Helpers\PjnBotHelper;
