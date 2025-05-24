@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Bots;
 use App\Helpers;
 use App\Helpers\PjnBotHelper;
 use App\Helpers\ScbaBotHelper;
+use App\Http\Controllers\Controller;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
