@@ -14,9 +14,9 @@ class DashboardController extends Controller
         return Inertia::render('dashboard', []);
     }
 
-    public function calculator()
+    public function calculators()
     {
-        return Inertia::render('calculator', [
+        return Inertia::render('calculators', [
             "precio_ius" => SessionCache::getPrecioIus(),
             "today" => date('d/m/Y')
         ]);

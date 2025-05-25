@@ -32,3 +32,61 @@
 .client-wrapper {
     margin-top: 0.5em;
 }
+
+.which-calculator {
+    margin-top: 0.5em;
+    margin-bottom: 2em;
+}
+
+.which-calculator select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    width: 100%;
+    box-sizing: border-box;
+    max-width: 400px;
+    margin-left: 1em;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 6px 0px 6px 7px;
+    font-size: 16px;
+    color: #333;
+
+    background-image: url("data:image/svg+xml;utf8,<svg fill='gray' height='20' viewBox='0 0 24 24' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px;
+
+    cursor: pointer;
+    transition:
+        border-color 0.3s,
+        box-shadow 0.3s;
+}
+
+.which-calculator select:focus {
+    outline: none;
+    border-color: #66afe9;
+    box-shadow: 0 0 0 3px rgba(102, 175, 233, 0.3);
+}
+
+.number-input {
+    padding: 1px 5px;
+    border-radius: 3px;
+    margin-left: 8px;
+    border: 1px solid black;
+    width: 100px;
+}
+
+.result-wrapper {
+    margin-top: 2em;
+}
+
+.result-wrapper .final-result {
+    font-weight: bold;
+}
+
+.generic-calculator-form > div {
+    margin-bottom: 0.8em;
+}

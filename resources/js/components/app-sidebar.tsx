@@ -29,8 +29,8 @@ const mainNavItems: NavItem[] = [
         icon: AlignJustify,
     },
     {
-        title: 'Calculadora',
-        href: '/calculadora',
+        title: 'Calculadoras',
+        href: '/calculadoras',
         icon: Calculator,
     },
     // {

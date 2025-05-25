@@ -21,6 +21,14 @@ export const clientSideDownload = (blob: any, filename: string) => {
     a.click();
     a.remove();
 };
+const priceFormatter = new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+});
+
+export const formatArPrice = (price: number) => priceFormatter.format(price);
 
 export const fuerosOptions = [
     {
