@@ -1,4 +1,5 @@
 import AnimatedTitle from '@/components/AnimatedTitle';
+import FloatingLabelInput from '@/components/FloatingLabelInput';
 import { clientSideDownload, formatArPrice } from '@/lib/utils';
 import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
@@ -9,6 +10,8 @@ export const IusCalculator = () => {
     const [name, setName] = useState('');
 
     const precioTotal = !isNaN(ius) ? ius * parseInt(precio_ius as string) : undefined;
+
+    const [nose, setNose] = useState('');
 
     const downloadPDF = async () => {
         const head: string = `
@@ -62,13 +65,16 @@ export const IusCalculator = () => {
                 Precio IUS: <span className="ius-price">{formatArPrice(precio_ius as any)}</span> <br />
             </div>
             <div className="client-wrapper">
-                Nombre :
-                <input type="text" className="client-input" value={name} onChange={(e) => setName(e.target.value)} />
+                <FloatingLabelInput label="Nombre" value={name} onChange={(e: any) => setName(e.target.value)} id="ius-nombre" />
             </div>
 
-            <div className="ius-input-wrapper">
-                Cantidad de IUS :
-                <input type="text" className="ius-input" onChange={(e) => setIus(parseInt(e.target.value))} />
+            <div className="client-wrapper">
+                <FloatingLabelInput
+                    label="Cantidad de IUS"
+                    value={isNaN(ius) ? '' : (ius as any)}
+                    onChange={(e: any) => setIus(parseInt(e.target.value))}
+                    id="ius-nombre"
+                />
             </div>
             <div className="ius-final-price">
                 Precio total: <span className="price">{precioTotal && formatArPrice(precioTotal)}</span>
