@@ -21,6 +21,7 @@ export const clientSideDownload = (blob: any, filename: string) => {
     a.click();
     a.remove();
 };
+
 const priceFormatter = new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: 'ARS',
@@ -29,6 +30,12 @@ const priceFormatter = new Intl.NumberFormat('es-AR', {
 });
 
 export const formatArPrice = (price: number) => priceFormatter.format(price);
+
+// Elimina ceros a la izquierda y formatea con puntos
+export const priceWithDots = (numStr: string) => {
+    const num = numStr.replace(/\D/g, '');
+    return num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+};
 
 export const fuerosOptions = [
     {

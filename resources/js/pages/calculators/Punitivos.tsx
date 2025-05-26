@@ -1,6 +1,6 @@
 import AnimatedTitle from '@/components/AnimatedTitle';
 import FloatingLabelInput from '@/components/FloatingLabelInput';
-import { formatArPrice } from '@/lib/utils';
+import { formatArPrice, priceWithDots } from '@/lib/utils';
 import { useState } from 'react';
 
 export const Punitivos = () => {
@@ -21,7 +21,7 @@ export const Punitivos = () => {
                 <div>
                     <FloatingLabelInput
                         label="Capital"
-                        value={capital}
+                        value={priceWithDots(capital)}
                         onChange={(e: any) => setCapital(e.target.value.replace(/\D/g, ''))}
                         id="punitivo-capital"
                         leftSign="$"
