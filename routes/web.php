@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Bots\BotController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\System\LogController;
 use App\Http\Controllers\MateriasController;
 use App\Http\Controllers\UtilsController;
@@ -68,7 +69,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('materias/nueva', [MateriasController::class, 'new']);
     Route::post('materias/store', [MateriasController::class, 'store']);
 
-    Route::get('calculadoras', [DashboardController::class, 'calculators']);
+    Route::get('/calculadoras', [DashboardController::class, 'calculators']);
+
+    Route::get('/documents', [DocumentsController::class, 'index']);
+    Route::get('/documents/instantiate', [DocumentsController::class, 'downloadDocument']);
 });
 
 require __DIR__ . '/settings.php';

@@ -45,7 +45,7 @@ class MateriasController extends Controller
             "fuero_id" => $request->fuero
         ]);
 
-        return redirect()->back()->with('success', 'Usuario creado');
+        return redirect()->back()->with('success', 'Materia creado');
     }
 
     /**

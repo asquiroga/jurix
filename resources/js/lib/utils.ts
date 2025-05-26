@@ -37,6 +37,11 @@ export const priceWithDots = (numStr: string) => {
     return num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
 
+export const buildQueryString = (params: any) => {
+    const queryString = new URLSearchParams(Object.fromEntries(Object.entries(params).filter(([_, v]) => v != null)) as unknown as any[]).toString();
+    return queryString;
+};
+
 export const fuerosOptions = [
     {
         value: 1,
