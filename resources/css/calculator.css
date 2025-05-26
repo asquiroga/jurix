@@ -90,3 +90,7 @@
 .generic-calculator-form > div {
     margin-bottom: 0.8em;
 }
+
+.patentes-auto-calculator input.small-button {
+    margin-right: 1em;
+}

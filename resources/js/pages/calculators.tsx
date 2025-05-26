@@ -4,6 +4,7 @@ import { Head } from '@inertiajs/react';
 import { JSX, useState } from 'react';
 import '../../css/calculator.css';
 import IusCalculator from './calculators/IusCalculator';
+import PatentesAuto from './calculators/PatentesAuto';
 import Punitivos from './calculators/Punitivos';
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -16,6 +17,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 const componentMap: Record<string, JSX.Element> = {
     ius: <IusCalculator />,
     punitivos: <Punitivos />,
+    patenteAutomotor: <PatentesAuto />,
 };
 
 export default function Calculadora() {
@@ -35,6 +37,7 @@ export default function Calculadora() {
                                 </option>
                                 <option value="ius">IUS</option>
                                 <option value="punitivos">Punitivos</option>
+                                <option value="patenteAutomotor">Año de Automotor por patente</option>
                             </select>
                         </div>
                         <div className="current-calculator">{opcion && componentMap[opcion]}</div>
