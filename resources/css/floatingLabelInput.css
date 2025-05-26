@@ -14,6 +14,10 @@
     outline: none;
 }
 
+.left-icon > .input-field {
+    padding-left: 21px;
+}
+
 .input-label {
     position: absolute;
     top: 50%;
@@ -26,10 +30,22 @@
     pointer-events: none;
 }
 
+.left-icon > .input-label {
+    left: 1.3rem;
+    background: none;
+}
+
 .input-field:focus + .input-label,
 .input-field:valid + .input-label {
     top: -0.6rem;
     left: 0;
     font-size: 0.75rem;
     color: #407fc7;
+}
+
+span.input-icon {
+    position: absolute;
+    top: 11px;
+    left: 6px;
+    color: #666;
 }

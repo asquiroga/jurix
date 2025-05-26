@@ -90,10 +90,17 @@ class PjnBotHelper
     public static function getFechaFromRequest(Request $request)
     {
         if ($request->has('fecha') && Helpers::esFechaValida($request->query('fecha'))) {
-            return DateTime::createFromFormat("d/m/Y", $request->query('fecha'))->format("Ymd");
+            $fecha = DateTime::createFromFormat("d/m/Y", $request->query('fecha'));
+        } else {
+            $fecha = new DateTime();
         }
 
-        return date('Ymd');
+        if ($fecha->format('N') == 1) { // si es Lunes, incluimos el viernes
+            $fecha->modify('-3 days');
+        } else {
+            $fecha->modify('-1 days');
+        }
+        return $fecha->format("Ymd");
     }
 
     public static function getPositionFromRequest(Request $request)

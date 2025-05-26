@@ -24,13 +24,7 @@ class BotController extends Controller
 
     public function getScbaNotifications(Request $request)
     {
-        $fecha = "";
-        if ($request->has('fecha') && Helpers::esFechaValida($request->query('fecha'))) {
-            $fecha = $request->query('fecha');
-        } else {
-            $fecha = date('d/m/Y');
-        }
-
+        $fecha = ScbaBotHelper::getFechaFromRequest($request);
         $response = ScbaBotHelper::scbaLogin();
 
         if ($response->successful()) {
@@ -43,25 +37,7 @@ class BotController extends Controller
             }
 
             // Pegarle por AJAX al listado de notificaciones
-            $searchPayload = [
-                'codigoBarras' => '',
-                'caratula' => '',
-                'tramites' => 'null',
-                'Desde' => $fecha,
-                'Hasta' => '',
-                'domicilio' => "-1",
-                'departamento' => "-1",
-                'org' => "",
-                'texto' => "",
-                'procesada' => "0",
-                'descripDep' => "Todos",
-                'OrganismoDescrip' => "",
-                'descripTramites' => "",
-                'descripDom' => "Todos",
-                'descripProcesada' => "No Procesadas",
-                'pagina' => "1",
-                'orden' => "FECHANOTIFICACION"
-            ];
+            $searchPayload = ScbaBotHelper::notificationsPayload($fecha);
 
             $response = Http::withHeaders([
                 'Accept' => 'application/json',

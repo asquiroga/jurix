@@ -2,9 +2,6 @@
 // app/Helpers/TextHelper.php
 namespace App;
 
-use DateTime;
-use Illuminate\Support\Facades\Http;
-
 class Helpers
 {
     public static function quitarAcentos(string $cadena): string

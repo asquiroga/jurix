@@ -24,6 +24,7 @@ export const Punitivos = () => {
                         value={capital}
                         onChange={(e: any) => setCapital(e.target.value.replace(/\D/g, ''))}
                         id="punitivo-capital"
+                        leftSign="$"
                     />
                 </div>
                 <div>
@@ -32,6 +33,7 @@ export const Punitivos = () => {
                         value={pc}
                         onChange={(e: any) => setPc(e.target.value.replace(/\D/g, ''))}
                         id="punitivo-pc"
+                        leftSign="%"
                     />
                 </div>
                 <div>
@@ -40,6 +42,7 @@ export const Punitivos = () => {
                         value={pd}
                         onChange={(e: any) => setPd(e.target.value.replace(/\D/g, ''))}
                         id="punitivo-pd"
+                        leftSign="%"
                     />
                 </div>
 
