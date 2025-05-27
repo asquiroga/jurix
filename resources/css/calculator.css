@@ -33,11 +33,6 @@
     margin-top: 0.5em;
 }
 
-.which-calculator {
-    margin-top: 0.5em;
-    margin-bottom: 2em;
-}
-
 .which-calculator select {
     appearance: none;
     -webkit-appearance: none;
@@ -109,4 +104,16 @@
 
 .velocidad-sumario span {
     font-weight: bold;
+}
+
+.inflacion-result {
+    font-size: 14px;
+}
+
+.inflacion-result span {
+    font-weight: bold;
+}
+
+.inflacion-result div.final-result {
+    font-size: 16px;
 }

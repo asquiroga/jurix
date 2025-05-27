@@ -38,7 +38,7 @@ export const VelocidadesMaximas = () => {
                 <h2 className="subtitle">C&aacute;lculo de Velocidades para Descargos por Multas de Tr&aacute;nsito</h2>
             </div>
 
-            <div className="which-calculator" style={{ textAlign: 'center' }}>
+            <div className="which-calculator mt-4" style={{ textAlign: 'center' }}>
                 <select onChange={selectHandler} style={{ width: '230px' }}>
                     <option selected value="menores">
                         Menor a 100 km/h
