@@ -94,3 +94,19 @@
 .patentes-auto-calculator input.small-button {
     margin-right: 1em;
 }
+
+.subtitle {
+    font-size: 1.2em;
+}
+
+.velocidad-sumario {
+    font-size: 13px;
+}
+
+.velocidad-sumario > div {
+    margin-bottom: 5px;
+}
+
+.velocidad-sumario span {
+    font-weight: bold;
+}

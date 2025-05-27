@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Bots\BotController;
+use App\Http\Controllers\CausasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentsController;
 use App\Http\Controllers\System\LogController;
@@ -73,6 +74,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('/documents', [DocumentsController::class, 'index']);
     Route::get('/documents/instantiate', [DocumentsController::class, 'downloadDocument']);
+
+
+    Route::get('/causas', [CausasController::class, 'index']);
 });
 
 require __DIR__ . '/settings.php';

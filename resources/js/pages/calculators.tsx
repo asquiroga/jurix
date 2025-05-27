@@ -6,6 +6,7 @@ import '../../css/calculator.css';
 import IusCalculator from './calculators/IusCalculator';
 import PatentesAuto from './calculators/PatentesAuto';
 import Punitivos from './calculators/Punitivos';
+import VelocidadesMaximas from './calculators/VelocidadesMaximas';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -18,6 +19,7 @@ const componentMap: Record<string, JSX.Element> = {
     ius: <IusCalculator />,
     punitivos: <Punitivos />,
     patenteAutomotor: <PatentesAuto />,
+    velocidadesMaximas: <VelocidadesMaximas />,
 };
 
 export default function Calculadora() {
@@ -39,9 +41,10 @@ export default function Calculadora() {
                                 <option value="ius">IUS</option>
                                 <option value="punitivos">Punitivos</option>
                                 <option value="patenteAutomotor">Año de Automotor por patente</option>
+                                <option value="velocidadesMaximas">Velocidades Maximas (Automotor)</option>
                             </select>
                         </div>
-                        <div className="current-calculator">{opcion && componentMap[opcion]}</div>
+                        <div className="current-calculator mx-auto sm:max-w-[400px] lg:max-w-[800px]">{opcion && componentMap[opcion]}</div>
                     </div>
                 </div>
             </div>
