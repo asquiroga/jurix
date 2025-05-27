@@ -104,7 +104,7 @@ const calcular = (monto: number, desde: string, hasta: string) => {
     if (ipcMensual[hasta] === undefined) return ['', 'No se tiene registro para la fecha ' + hasta];
 
     const final = (monto * (ipcMensual[hasta] / ipcMensual[desde])).toFixed(2);
-    const variacion = (ipcMensual[hasta] - ipcMensual[desde]).toFixed(1);
+    const variacion = ((ipcMensual[hasta] / ipcMensual[desde] - 1) * 100).toFixed(1);
 
     return [`${variacion} %`, formatArPrice(parseFloat(final))];
 };
