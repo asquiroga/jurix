@@ -109,7 +109,7 @@
     --sidebar-primary-foreground: oklch(0.985 0 0);
     --sidebar-accent: oklch(0.97 0 0);
     --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
+    --sidebar-border: #c0c0c0;
     --sidebar-ring: oklch(0.87 0 0);
 }
 
@@ -410,62 +410,4 @@ div.notif-body .paragraph {
 
 .dashboard-datepicker-wrapper {
     text-align: center;
-}
-
-.dashboard-datepicker-wrapper > div:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.dashboard-date-picker {
-    top: 5px;
-    text-align: center;
-    margin-left: 1em;
-}
-
-.dashboard-date-selected {
-    margin-top: 0.5em;
-    text-align: center;
-    font-weight: bold;
-    font-size: 1.2em;
-}
-.dashboard-date-picker > div {
-    padding: 3px 8px;
-}
-
-.dashboard-date-picker > div > div {
-    display: none;
-}
-
-.fecha-animada {
-    animation-fill-mode: forwards;
-}
-
-.fecha-animada.animar {
-    animation: parpadeo 0.8s ease forwards;
-}
-
-@keyframes parpadeo {
-    0%,
-    100% {
-        opacity: 1;
-    }
-    50% {
-        opacity: 0.3;
-    }
-}
-
-div.pjn-notification-details {
-    margin-top: 1em;
-}
-div.pjn-notification {
-    margin: 0.8em;
-    border: 0px solid #707070;
-    padding: 0.4em;
-    font-size: 0.8em;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    background-color: #f0fefb;
-}
-
-div.pjn-notification:nth-child(even) {
-    background-color: #d8fbf0;
 }

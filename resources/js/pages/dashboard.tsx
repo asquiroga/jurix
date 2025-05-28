@@ -1,3 +1,4 @@
+import ToggleSwitch from '@/components/ToggleSwitch';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
@@ -5,6 +6,7 @@ import { useState } from 'react';
 import 'react-calendar/dist/Calendar.css';
 import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
+import '../../css/dashboard.css';
 import { useDashboardStore } from './subcomponents/DashboardStore';
 import PjnNotifications from './subcomponents/PjnNotifications';
 import ScbaNotifications from './subcomponents/ScbaNotifications';
@@ -19,6 +21,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Dashboard() {
     const [animarFecha, setAnimarFecha] = useState(false);
     const { loadingPjn, loadingScba } = useDashboardStore();
+    const [bots, setBots] = useState({
+        scba: true,
+        pjn: true,
+        mev: false,
+    });
 
     const [selectedDate, setSelectedDate] = useState('');
     const handleDateChange = (date: any) => {
@@ -39,11 +46,25 @@ export default function Dashboard() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
-                <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border p-3 md:min-h-min">
-                    <div className="m-2 mt-5">
+            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-2">
+                <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border p-2 md:min-h-min">
+                    <div className="m-2 mt-0">
                         <div className="dashboard-datepicker-wrapper">
-                            <span>Seleccione el dia:</span>
+                            <div className="mb-2 flex justify-center gap-5 text-xs">
+                                <div className="flex items-center gap-1">
+                                    SCBA
+                                    <ToggleSwitch value={bots.scba} onChange={(scba) => setBots({ ...bots, scba })} />
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    PJN
+                                    <ToggleSwitch value={bots.pjn} onChange={(pjn) => setBots({ ...bots, pjn })} />
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    MEV
+                                    <ToggleSwitch value={bots.mev} onChange={() => setBots({ ...bots, mev: false })} />
+                                </div>
+                            </div>
+                            <span style={{ display: 'block' }}>Seleccione el dia:</span>
                             <DatePicker
                                 locale={'es'}
                                 onChange={handleDateChange}
@@ -64,8 +85,9 @@ export default function Dashboard() {
                             />
                         </div>
                         {selectedDate && <div className={`dashboard-date-selected fecha-animada ${animarFecha ? 'animar' : ''}`}>{selectedDate}</div>}
-                        <ScbaNotifications fecha={selectedDate} />
-                        <PjnNotifications fecha={selectedDate} />
+
+                        {bots.scba && <ScbaNotifications fecha={selectedDate} />}
+                        {bots.pjn && <PjnNotifications fecha={selectedDate} />}
                     </div>
                 </div>
             </div>
