@@ -14,7 +14,7 @@ export const PjnNotifications = ({ fecha }: { fecha: string }) => {
         setLoadingPjn(true);
         setPjnNotifications([]);
         axios
-            .get('/bot/pjn-notifications?fecha=' + fecha)
+            .get('/bot/pjn/notifications?fecha=' + fecha)
             .then((response) => {
                 setLoadingPjn(false);
                 setPjnNotifications(response.data);
@@ -28,7 +28,7 @@ export const PjnNotifications = ({ fecha }: { fecha: string }) => {
 
     const fetchNotifications = (pjnNotif: any) => {
         setGettingNotifications(true);
-        const url = `/bot/pjn-expediente?fecha=${fecha}&position=${pjnNotif.faces_position}`;
+        const url = `/bot/pjn/expediente?fecha=${fecha}&position=${pjnNotif.faces_position}`;
         axios.get(url).then((response) => {
             setGettingNotifications(false);
             pjnNotif.details = response.data;

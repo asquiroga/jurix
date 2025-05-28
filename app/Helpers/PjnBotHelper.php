@@ -26,6 +26,7 @@ class PjnBotHelper
                 'protocols'       => ['http', 'https'],
                 'track_redirects' => false
             ],
+            'timeout' => 8.0,
         ]);
 
         $response = self::pjnLoginWithClient($client);

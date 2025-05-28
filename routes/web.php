@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Bots\BotController;
+use App\Http\Controllers\Bots\MevBotController;
+use App\Http\Controllers\Bots\PjnBotController;
+use App\Http\Controllers\Bots\ScbaBotController;
 use App\Http\Controllers\CausasController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentsController;
@@ -55,10 +58,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/system/tail-log', [LogController::class, 'showLastLines']);
 
     // Bots
-    Route::get('/bot/scba-notifications', [BotController::class, 'getScbaNotifications']);
-    Route::get('/bot/scba-get-notification', [BotController::class, 'getScbaNotificationBody']);
-    Route::get('/bot/pjn-notifications', [BotController::class, 'pjn']);
-    Route::get('/bot/pjn-expediente', [BotController::class, 'pjnExpediente']);
+    Route::get('/bot/scba/notifications', [ScbaBotController::class, 'getNotifications']);
+    Route::get('/bot/scba/get-notification', [ScbaBotController::class, 'getNotificationBody']);
+
+    Route::get('/bot/pjn/notifications', [PjnBotController::class, 'getNotifications']);
+    Route::get('/bot/pjn/expediente', [PjnBotController::class, 'getExpediente']);
+
+    Route::get('/bot/mev/test', [MevBotController::class, 'test']);
 
     Route::get('/bot/test', [BotController::class, 'test']);
 

@@ -17,7 +17,7 @@ export const ScbaNotifications = ({ fecha }: { fecha: string }) => {
             setLoadingScba(true);
             setScbaNotifications([]);
             axios
-                .get('/bot/scba-notifications?fecha=' + fecha)
+                .get('/bot/scba/notifications?fecha=' + fecha)
                 .then((response) => {
                     setLoadingScba(false);
                     setScbaNotifications(response.data);
@@ -79,7 +79,7 @@ export const ScbaNotifications = ({ fecha }: { fecha: string }) => {
         setLoadingScba(true);
         notification.loading = true;
         axios
-            .get('/bot/scba-get-notification?url=' + notification.Caratula.link)
+            .get('/bot/scba/get-notification?url=' + notification.Caratula.link)
             .then((response) => {
                 notification.body = response.data;
                 console.log(notification.body);

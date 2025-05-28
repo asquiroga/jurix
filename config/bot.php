@@ -13,7 +13,7 @@ return [
         "listar" => "https://scw.pjn.gov.ar/scw/consultaListaRelacionados.seam"
     ],
     "mev" => [
-        "loginUrl" => "https://mev.scba.gov.ar/loguin.asp"
+        "loginPostUrl" => "https://mev.scba.gov.ar/loguin.asp?familiadepto="
     ]
 
 ];
