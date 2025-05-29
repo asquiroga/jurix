@@ -5,15 +5,62 @@ namespace App\Http\Controllers\Bots;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
+use GuzzleHttp\Pool;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Psr\Http\Message\ResponseInterface;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\DomCrawler\Crawler;
 
 class MevBotController extends Controller
 {
     public function test(Request $request)
     {
+        $inicio = microtime(true);
+        [$client, $cookieJar] = $this->login();
+
+        $allResults = [];
+
+        // Busqueda en un SET (nidset)
+        $response = $client->get("https://mev.scba.gov.ar/resultados.asp?nidset=1876963&sfechadesde=27/5/2025&sfechahasta=29/5/2025&pOrden=xCa&pOrdenAD=Asc");
+        $crawler = new Crawler($response->getBody()->getContents());
+
+        [$organismos, $selected] = $this->scrapOrganismos($crawler);
+        $this->scraper($crawler, $allResults, $selected["value"]);
+
+        $keys = array_keys($organismos); // guardás las claves en orden
+        $requests = function () use ($organismos, $client) {
+            foreach ($organismos as $index => $value) {
+                yield function () use ($index, $client) {
+                    return $client->postAsync('https://mev.scba.gov.ar/resultados.asp?sFechaDesde=27/5/2025&sFechaHasta=29/5/2025', [
+                        'form_params' => [
+                            'JuzgadoElegido' => $index,
+                            'Consultar' => 'Consultar',
+                        ],
+                    ]);
+                };
+            }
+        };
+
+        $pool = new Pool($client, $requests(), [
+            'concurrency' => 4,
+            'fulfilled' => function ($response, $index) use (&$allResults, $keys) {
+                $this->scraper(new Crawler($response->getBody()->getContents()), $allResults, $keys[$index]);
+            },
+            'rejected' => function ($reason, $index) {
+                Log::error("Falló request al juzgado {$index}: " . $reason);
+            },
+        ]);
+
+        $pool->promise()->wait();
+
+        $fin = microtime(true);
+        $duration = $fin - $inicio;
+
+        return response()->json($allResults)->header('X-Jurix-Bot-Mev-Duration', $duration);
+    }
+
+    public function testSecuencial(Request $request)
+    {
+        $inicio = microtime(true);
         [$client, $cookieJar] = $this->login();
 
         $allResults = [];
@@ -27,16 +74,23 @@ class MevBotController extends Controller
         /* en $organismos estan todos los que tenemos que hacer fetch */
 
         //siguiente fetch por POST
-        $response = $client->post("https://mev.scba.gov.ar/resultados.asp?sFechaDesde=27/5/2025&sFechaHasta=29/5/2025", [
-            'form_params' => [
-                "JuzgadoElegido" => "GAM239",
-                "Consultar" => "Consultar"
-            ]
-        ]);
 
-        //$this->scraper($response, $allResults, false);
 
-        dd($allResults);
+        foreach ($organismos as $key => $value) {
+            $response = $client->post("https://mev.scba.gov.ar/resultados.asp?sFechaDesde=27/5/2025&sFechaHasta=29/5/2025", [
+                'form_params' => [
+                    "JuzgadoElegido" => $key,
+                    "Consultar" => "Consultar"
+                ]
+            ]);
+
+            $this->scraper(new Crawler($response->getBody()->getContents()), $allResults, $key);
+        }
+
+        $fin = microtime(true);
+        $duration = $fin - $inicio;
+
+        return response()->json($allResults)->header('X-Jurix-Bot-Mev-Duration', $duration);
     }
 
     private function scraper(Crawler $crawler, &$results, $organismo)
