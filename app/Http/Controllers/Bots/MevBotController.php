@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 class MevBotController extends Controller
@@ -14,25 +16,32 @@ class MevBotController extends Controller
     {
         [$client, $cookieJar] = $this->login();
 
-        $response = $client->post("https://mev.scba.gov.ar/POSLoguin.asp", [
-            'form_params' => [
-                "TipoDto" => "CC",
-                "DtoJudElegido" => "6",
-                "Aceptar" => "Aceptar"
-            ],
-        ]);
-
-        $response = $client->get("https://mev.scba.gov.ar/Busqueda.asp");
-
+        $allResults = [];
 
         // Busqueda en un SET (nidset)
         $response = $client->get("https://mev.scba.gov.ar/resultados.asp?nidset=1876963&sfechadesde=27/5/2025&sfechahasta=29/5/2025&pOrden=xCa&pOrdenAD=Asc");
-
         $crawler = new Crawler($response->getBody()->getContents());
 
-        $rows = $crawler->filter("form > table")->eq(2)->filter("tr");
+        [$organismos, $selected] = $this->scrapOrganismos($crawler);
+        $this->scraper($crawler, $allResults, $selected["value"]);
+        /* en $organismos estan todos los que tenemos que hacer fetch */
 
-        $allResults = [];
+        //siguiente fetch por POST
+        $response = $client->post("https://mev.scba.gov.ar/resultados.asp?sFechaDesde=27/5/2025&sFechaHasta=29/5/2025", [
+            'form_params' => [
+                "JuzgadoElegido" => "GAM239",
+                "Consultar" => "Consultar"
+            ]
+        ]);
+
+        //$this->scraper($response, $allResults, false);
+
+        dd($allResults);
+    }
+
+    private function scraper(Crawler $crawler, &$results, $organismo)
+    {
+        $rows = $crawler->filter("form > table")->eq(2)->filter("tr");
 
         for ($i = 0; $i < $rows->count(); $i += 2) {
             $current = [];
@@ -45,7 +54,6 @@ class MevBotController extends Controller
             }
 
             $detailRow->filter('td')->each(function ($td, $i) use (&$current) {
-                //echo $i . " . " . $td->text() . '<br/>';
                 $text = trim(str_replace("\u{A0}", '', $td->text()));
                 if ($i === 0) $current["Estado"] = $text;
                 if ($i === 1) $current["NroReceptoria"] = $text;
@@ -53,37 +61,29 @@ class MevBotController extends Controller
                 if ($i === 3) $current["Fecha"] = $text;
                 if ($i === 4) $current["PasoConFecha"] = $text;
             });
-            $allResults[] = $current;
+            $current["Organismo"] = $organismo;
+            $results[] = $current;
         }
-        dd($allResults);
-        $crawler = new Crawler($response->getBody()->getContents());
+    }
 
+    private function  scrapOrganismos(Crawler $crawler)
+    {
+        $optionSelectedObj = $crawler->filter("select#JuzgadoElegido > option[selected]");
+        $optionSelected = [
+            "text" => trim($optionSelectedObj->text()),
+            "value" => trim($optionSelectedObj->attr("value"))
+        ];
         $organismos = [];
         $crawler->filter("#JuzgadoElegido option")->each(function (Crawler $option) use (&$organismos) {
-            $organismos[] = trim($option->attr("value"));
+            $organismos[trim($option->attr("value"))] = trim($option->text());
         });
 
-        $optionSelected = trim($crawler->filter("#JuzgadoElegido option:selected")->attr("value"));
-        if ($optionSelected) {
-            $clave = array_search($optionSelected, $organismos);
-
-            if ($clave !== false) {
-                unset($organismos[$clave]);
-            }
+        if ($optionSelected["value"]) {
+            if (array_key_exists($optionSelected["value"], $organismos))
+                unset($organismos[$optionSelected["value"]]);
         }
 
-
-        /* en $organismos estan todos los que tenemos que hacer fetch */
-
-        //siguiente fetch por POST
-        $response = $client->post("https://mev.scba.gov.ar/resultados.asp?sFechaDesde=27/5/2025&sFechaHasta=29/5/2025", [
-            'form_params' => [
-                "JuzgadoElegido" => "GAM239",
-                "Consultar" => "Consultar"
-            ]
-        ]);
-
-        echo $response->getBody()->getContents();
+        return [$organismos, $optionSelected];
     }
 
     private function login()
@@ -109,6 +109,14 @@ class MevBotController extends Controller
         if (!str_contains($r[0], "POSLoguin.asp")) {
             abort(401, "Credenciales invalidas");
         };
+
+        $client->post("https://mev.scba.gov.ar/POSLoguin.asp", [
+            'form_params' => [
+                "TipoDto" => "CC",
+                "DtoJudElegido" => "6",
+                "Aceptar" => "Aceptar"
+            ],
+        ]);
 
         return [$client, $cookieJar];
     }

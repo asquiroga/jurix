@@ -43,7 +43,7 @@ export const PjnNotifications = ({ fecha }: { fecha: string }) => {
 
     return (
         <div>
-            <TitleWithLongLine title="P.J.N." />
+            <TitleWithLongLine title="P.J.N." className="mt-8 mb-4" />
             {fetchPjnNotifError && <div> {fetchPjnNotifError} </div>}
             {pjnNotifications && (
                 <div>

@@ -97,7 +97,7 @@ export const ScbaNotifications = ({ fecha }: { fecha: string }) => {
 
     return (
         <div>
-            <TitleWithLongLine title="S.C.B.A." className="my-8" />
+            <TitleWithLongLine title="S.C.B.A." className="mt-8 mb-4" />
             {fetchNotifError && <div> {fetchNotifError} </div>}
             {scbaNotifications && (
                 <div>
