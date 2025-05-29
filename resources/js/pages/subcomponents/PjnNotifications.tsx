@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import TitleWithLongLine from '@/components/TitleWithLongLine';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useDashboardStore } from './DashboardStore';
@@ -11,6 +12,7 @@ export const PjnNotifications = ({ fecha }: { fecha: string }) => {
     const [gettingNotifications, setGettingNotifications] = useState(false);
 
     const fetchPjn = (fecha: string) => {
+        setFetchPjnNotifError('');
         setLoadingPjn(true);
         setPjnNotifications([]);
         axios
@@ -41,7 +43,7 @@ export const PjnNotifications = ({ fecha }: { fecha: string }) => {
 
     return (
         <div>
-            <h2 className="titulo-animado">PJN</h2>
+            <TitleWithLongLine title="P.J.N." />
             {fetchPjnNotifError && <div> {fetchPjnNotifError} </div>}
             {pjnNotifications && (
                 <div>

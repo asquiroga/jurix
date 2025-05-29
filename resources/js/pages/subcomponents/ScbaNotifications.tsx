@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import TitleWithLongLine from '@/components/TitleWithLongLine';
 import { clientSideDownload } from '@/lib/utils';
 import axios from 'axios';
 import { LoaderCircle } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { useDashboardStore } from './DashboardStore';
-
 export const ScbaNotifications = ({ fecha }: { fecha: string }) => {
     const [gettingPdf, setGettingPdf] = useState(false);
     const [scbaNotifications, setScbaNotifications] = useState<any>([]);
@@ -14,6 +14,7 @@ export const ScbaNotifications = ({ fecha }: { fecha: string }) => {
 
     const fetchScba = useCallback(
         (fecha: string) => {
+            setFetchNotifError('');
             setLoadingScba(true);
             setScbaNotifications([]);
             axios
@@ -96,7 +97,7 @@ export const ScbaNotifications = ({ fecha }: { fecha: string }) => {
 
     return (
         <div>
-            <h2 className="titulo-animado">SCBA</h2>
+            <TitleWithLongLine title="S.C.B.A." className="my-8" />
             {fetchNotifError && <div> {fetchNotifError} </div>}
             {scbaNotifications && (
                 <div>

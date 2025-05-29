@@ -393,21 +393,6 @@ div.notif-body .paragraph {
     cursor: default;
 }
 
-/* Línea animada debajo del título */
-.titulo-animado::after {
-    content: '';
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    width: 0;
-    height: 4px;
-    background: #4a90e2;
-    transition:
-        width 0.5s ease,
-        left 0.5s ease;
-    border-radius: 2px;
-}
-
 .dashboard-datepicker-wrapper {
     text-align: center;
 }
