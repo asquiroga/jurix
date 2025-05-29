@@ -153,8 +153,8 @@ class MevBotController extends Controller
 
         $response = $client->post(config('bot.mev.loginPostUrl'), [
             'form_params' => [
-                'usuario' => 'lucasacarr',
-                'clave' => 'lxv30ESTUDIO!31',
+                'usuario' => env("MEV_USER"),
+                'clave' => env("MEV_PASSWORD"),
                 'DeptoRegistrado' => 'LP'
             ],
         ]);
