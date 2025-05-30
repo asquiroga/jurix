@@ -175,7 +175,7 @@ class MevBotController extends Controller
         ]);
 
         $r = $response->getHeader('X-Guzzle-Redirect-History');
-        if (!str_contains($r[0], "POSLoguin.asp")) {
+        if ($r && $r[0] && !str_contains($r[0], "POSLoguin.asp")) {
             abort(401, "Credenciales invalidas");
         };
 
