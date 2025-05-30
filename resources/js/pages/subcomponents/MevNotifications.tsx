@@ -44,7 +44,6 @@ const MevNotifications = ({ fecha }: { fecha: string }) => {
                             <div className="idExpte">
                                 Identificador: <span>{mevNotification?.IdExpediente} </span>
                             </div>
-                            <div className="fecha">{mevNotification?.Fecha}</div>
 
                             <div className="Organismo"></div>
                         </div>
