@@ -55,3 +55,72 @@ div.pjn-notification {
 div.pjn-notification:nth-child(even) {
     background-color: #d8fbf0;
 }
+
+div.notif-slot {
+    margin: 0.5em 0;
+    border: 1px solid gray;
+    padding: 0.5em 1em;
+}
+
+div.notif-slot:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+div.notif-slot.pjn .expediente {
+    color: gray;
+}
+
+div.notif-slot.pjn .caratula {
+    font-weight: bold;
+}
+
+div.notif-slot .fecha {
+    font-size: 0.9em;
+    color: gray;
+}
+
+div.notif-slot .tramite {
+    font-style: italic;
+    font-weight: bold;
+}
+
+div.notif-body {
+    background-color: #f0fefb;
+    padding: 10px 13px;
+    border-radius: 5px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease-out forwards;
+}
+
+div.notif-body .paragraph {
+    padding-bottom: 3px;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.one-notif-error {
+    color: red;
+    font-style: italic;
+    font-weight: bold;
+}
+
+/* SCBA, esconder QR */
+.scba-qr-wrapper {
+    display: none;
+}
+
+.dashboard-datepicker-wrapper {
+    text-align: center;
+}
+
+.notif-slot.mev .pasoConFecha {
+    font-weight: bold;
+}

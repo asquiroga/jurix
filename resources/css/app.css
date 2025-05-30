@@ -209,56 +209,6 @@
     transform: none; /* eliminar el efecto de escala */
 }
 
-div.notif-slot {
-    margin: 0.5em 0;
-    border: 1px solid gray;
-    padding: 0.5em 1em;
-}
-
-div.notif-slot:nth-child(even) {
-    background-color: #f8f8f8;
-}
-
-div.notif-slot.pjn .expediente {
-    color: gray;
-}
-
-div.notif-slot.pjn .caratula {
-    font-weight: bold;
-}
-
-div.notif-slot .fecha {
-    font-size: 0.9em;
-    color: gray;
-}
-
-div.notif-slot .tramite {
-    font-style: italic;
-    font-weight: bold;
-}
-
-div.notif-body {
-    background-color: #f0fefb;
-    padding: 10px 13px;
-    border-radius: 5px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.8s ease-out forwards;
-}
-
-div.notif-body .paragraph {
-    padding-bottom: 3px;
-}
-
-@keyframes fadeUp {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 .welcome-overlay {
     background-color: rgba(0, 0, 0, 0.6);
     opacity: 0;
@@ -282,38 +232,6 @@ div.notif-body .paragraph {
     text-shadow: 1px 1px 2px rgba(150, 150, 150, 0.3);
     box-shadow: 0 0px 26px rgba(0, 0, 0, 0.99);
     border: 2px solid rgba(0, 0, 0, 0.1);
-}
-
-.one-notif-error {
-    color: red;
-    font-style: italic;
-    font-weight: bold;
-}
-
-@keyframes fadeSlideUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes typing {
-    from {
-        width: 0;
-    }
-    to {
-        width: 16ch;
-    } /* ajustá según el largo del texto */
-}
-
-@keyframes blink {
-    50% {
-        border-color: transparent;
-    }
 }
 
 @keyframes zoomIn {
@@ -374,12 +292,6 @@ div.notif-body .paragraph {
     }
 }
 
-/* SCBA, esconder QR */
-
-.scba-qr-wrapper {
-    display: none;
-}
-
 .titulo-animado {
     font-family: 'Poppins', sans-serif;
     font-size: 2rem;
@@ -391,8 +303,4 @@ div.notif-body .paragraph {
     margin: 25px 0 0;
     padding: 0;
     cursor: default;
-}
-
-.dashboard-datepicker-wrapper {
-    text-align: center;
 }

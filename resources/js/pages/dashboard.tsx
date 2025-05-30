@@ -8,6 +8,7 @@ import DatePicker from 'react-date-picker';
 import 'react-date-picker/dist/DatePicker.css';
 import '../../css/dashboard.css';
 import { useDashboardStore } from './subcomponents/DashboardStore';
+import MevNotifications from './subcomponents/MevNotifications';
 import PjnNotifications from './subcomponents/PjnNotifications';
 import ScbaNotifications from './subcomponents/ScbaNotifications';
 
@@ -20,11 +21,11 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 export default function Dashboard() {
     const [animarFecha, setAnimarFecha] = useState(false);
-    const { loadingPjn, loadingScba } = useDashboardStore();
+    const { loadingPjn, loadingScba, loadingMev } = useDashboardStore();
     const [bots, setBots] = useState({
         scba: true,
         pjn: true,
-        mev: false,
+        mev: true,
     });
 
     const [selectedDate, setSelectedDate] = useState('');
@@ -50,7 +51,7 @@ export default function Dashboard() {
                 <div className="border-sidebar-border/70 dark:border-sidebar-border relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border p-2 md:min-h-min">
                     <div className="m-2 mt-0">
                         <div className="dashboard-datepicker-wrapper">
-                            <div className="mb-2 flex justify-center gap-5 text-xs">
+                            <div className="absolute top-3 mb-2 flex justify-center gap-5 text-xs lg:top-[unset]">
                                 <div className="flex items-center gap-1">
                                     SCBA
                                     <ToggleSwitch value={bots.scba} onChange={(scba) => setBots({ ...bots, scba })} />
@@ -61,7 +62,7 @@ export default function Dashboard() {
                                 </div>
                                 <div className="flex items-center gap-1">
                                     MEV
-                                    <ToggleSwitch value={bots.mev} onChange={() => setBots({ ...bots, mev: false })} />
+                                    <ToggleSwitch value={bots.mev} onChange={(mev) => setBots({ ...bots, mev })} />
                                 </div>
                             </div>
                             <span style={{ display: 'block' }}>Seleccione el dia:</span>
@@ -81,13 +82,14 @@ export default function Dashboard() {
                                           )
                                         : null
                                 }
-                                disabled={loadingPjn || loadingScba}
+                                disabled={loadingPjn || loadingScba || loadingMev}
                             />
                         </div>
                         {selectedDate && <div className={`dashboard-date-selected fecha-animada ${animarFecha ? 'animar' : ''}`}>{selectedDate}</div>}
 
                         {bots.scba && <ScbaNotifications fecha={selectedDate} />}
                         {bots.pjn && <PjnNotifications fecha={selectedDate} />}
+                        {bots.mev && <MevNotifications fecha={selectedDate} />}
                     </div>
                 </div>
             </div>

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Bots;
 
+use App\Helpers;
 use App\Http\Controllers\Controller;
+use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\CookieJar;
 use GuzzleHttp\Pool;
@@ -12,25 +14,37 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class MevBotController extends Controller
 {
-    public function test(Request $request)
+    public function notifications(Request $request)
     {
+        [$fechaFrom, $fechaHasta] = $this->getFechaFromRequest($request);
         $inicio = microtime(true);
         [$client, $cookieJar] = $this->login();
 
         $allResults = [];
 
         // Busqueda en un SET (nidset)
-        $response = $client->get("https://mev.scba.gov.ar/resultados.asp?nidset=1876963&sfechadesde=27/5/2025&sfechahasta=29/5/2025&pOrden=xCa&pOrdenAD=Asc");
+        $url =  "https://mev.scba.gov.ar/resultados.asp?nidset=1876963&sfechadesde={{desde}}&sfechahasta={{hasta}}&pOrden=xCa&pOrdenAD=Asc";
+        $url = strtr($url, [
+            "{{desde}}" => $fechaFrom,
+            "{{hasta}}" => $fechaHasta,
+        ]);
+
+        $response = $client->get($url);
         $crawler = new Crawler($response->getBody()->getContents());
 
         [$organismos, $selected] = $this->scrapOrganismos($crawler);
         $this->scraper($crawler, $allResults, $selected["value"]);
 
         $keys = array_keys($organismos); // guardás las claves en orden
-        $requests = function () use ($organismos, $client) {
+        $requests = function () use ($organismos, $client, $fechaFrom, $fechaHasta) {
             foreach ($organismos as $index => $value) {
-                yield function () use ($index, $client) {
-                    return $client->postAsync('https://mev.scba.gov.ar/resultados.asp?sFechaDesde=27/5/2025&sFechaHasta=29/5/2025', [
+                yield function () use ($index, $client, $fechaFrom, $fechaHasta) {
+                    $url = 'https://mev.scba.gov.ar/resultados.asp?sFechaDesde={{desde}}&sFechaHasta={{hasta}}';
+                    $url = strtr($url, [
+                        "{{desde}}" => $fechaFrom,
+                        "{{hasta}}" => $fechaHasta,
+                    ]);
+                    return $client->postAsync($url, [
                         'form_params' => [
                             'JuzgadoElegido' => $index,
                             'Consultar' => 'Consultar',
@@ -55,7 +69,8 @@ class MevBotController extends Controller
         $fin = microtime(true);
         $duration = $fin - $inicio;
 
-        return response()->json($allResults)->header('X-Jurix-Bot-Mev-Duration', $duration);
+        $result = ["data" => $allResults, "organismos" => $organismos];
+        return response()->json($result)->header('X-Jurix-Bot-Mev-Duration', $duration);
     }
 
     public function testSecuencial(Request $request)
@@ -173,5 +188,26 @@ class MevBotController extends Controller
         ]);
 
         return [$client, $cookieJar];
+    }
+
+    public static function getFechaFromRequest(Request $request)
+    {
+        if ($request->has('fecha') && Helpers::esFechaValida($request->query('fecha'))) {
+            $fecha = DateTime::createFromFormat("d/m/Y", $request->query('fecha'));
+        } else {
+            $fecha = new DateTime();
+        }
+
+        $hasta = clone $fecha;
+        $hasta->modify('+2 days');
+
+        if ($fecha->format('N') == 1) { // si es Lunes, incluimos el viernes
+            $fecha->modify('-3 days');
+        } else {
+            $fecha->modify('-1 days');
+        }
+
+
+        return [$fecha->format("d/m/Y"), $hasta->format("d/m/Y")];
     }
 }
