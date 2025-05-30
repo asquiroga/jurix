@@ -24,7 +24,7 @@ export const PjnNotifications = ({ fecha }: { fecha: string }) => {
             .catch((err) => {
                 setLoadingPjn(false);
                 console.log(err);
-                setFetchPjnNotifError('No se pudo traer las notificaciones desde SCBA.');
+                setFetchPjnNotifError('No se pudo traer las notificaciones desde PJN.');
             });
     };
 

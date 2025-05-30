@@ -15,7 +15,7 @@ class LogController extends Controller
             return response()->json(['error' => 'Log file not found'], 404);
         }
 
-        $lines = $this->tailCustom($logPath, 50);
+        $lines = $this->tailCustom($logPath, 150);
 
         return response($lines, 200)->header('Content-Type', 'text/plain');
     }
